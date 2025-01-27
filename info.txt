@@ -1,0 +1,5 @@
+3. -> Un MCD (Modèle Conceptuel de Données) est une représentation graphique des données d'un système d'information. Il permet de modéliser les entités, les relations entre elles et les contraintes associées. Le MCD est utilisé pour concevoir la structure d'une base de données de manière indépendante de toute considération technique ou de mise en œuvre. Il est souvent utilisé dans la phase de conception d'un projet de développement de base de données. (pas nécessaire)
+
+5. -> socket
+
+connexion/inscription  -> token + email
