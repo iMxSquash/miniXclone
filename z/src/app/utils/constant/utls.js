@@ -1,0 +1,6 @@
+export const URL = {
+    API_ARTICLE_POST: "http://localhost:3000/api/article",
+    API_ARTICLE_GET: "http://localhost:3000/api/article",
+    API_ARTICLE_EDIT: "http://localhost:3000/api/article/edit",
+    API_ARTICLE_DELETE: "http://localhost:3000/api/article/delete",
+}
