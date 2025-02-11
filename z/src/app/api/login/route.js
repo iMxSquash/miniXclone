@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import connect from '../../../../libs/mongodb';
 import User from '../../../../models/user.model';
 
+
 export async function POST(req) {
     try {
         const { email, password } = await req.json();
@@ -25,8 +26,19 @@ export async function POST(req) {
         // Générer un token JWT
         const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-        // Retourner le token JWT à l'utilisateur
-        return new Response(JSON.stringify({ token }), { status: 200 });
+        // Stocke le token dans un cookie sécurisé
+        cookies().set({
+            name: 'access_token',
+            value: token,
+            httpOnly: true,
+            path: '/',
+            maxAge: 86400,
+        });
+
+        // Supprime le mot de passe de la réponse
+        const { password: _, ...userData } = user._doc;
+
+        return NextResponse.json(userData, { status: 200 });
     }
     catch (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 500 });

@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { URL } from './utils/constant/utls';
+import withAuth from "./components/withAuth";
 
-export default async function Home() {
+const Home = () => {
 
   return (
     <>
@@ -11,4 +14,6 @@ export default async function Home() {
       </div>
     </>
   );
-}
+};
+
+export default withAuth(Home);
