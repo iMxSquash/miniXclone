@@ -1,28 +1,30 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { connectToDatabase } from "../../../service/api/mongodb";
+import connect from '../../../../libs/mongodb';
+import User from '../../../../models/user.model';
 
 export async function POST(req) {
-  const { email, password } = await req.json();
+    try {
+        const { name, email, password } = await req.json();
 
-  // Vérifier si l'email est déjà pris
-  const db = await connectToDatabase();
-  const existingUser = await db.collection('users').findOne({ email });
-  
-  if (existingUser) {
-    return new Response(JSON.stringify({ error: 'Email already in use' }), { status: 400 });
-  }
+        // Vérifier si l'email est déjà pris
+        await connect();
+        const existingUser = await User.findOne({ email });
 
-  // Hacher le mot de passe
-  const hashedPassword = await bcrypt.hash(password, 10);
+        if (existingUser) {
+            return new Response(JSON.stringify({ error: 'Email already in use' }), { status: 400 });
+        }
 
-  // Insérer le nouvel utilisateur dans la base de données
-  const newUser = { email, password: hashedPassword };
-  const result = await db.collection('users').insertOne(newUser);
+        // Hacher le mot de passe
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Générer un token JWT
-  const token = jwt.sign({ id: result.insertedId, email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        // Insérer le nouvel utilisateur dans la base de données
+        const newUser = { name, email, password: hashedPassword };
+        const result = await User.insertOne(newUser);
 
-  // Retourner le token JWT à l'utilisateur
-  return new Response(JSON.stringify({ token }), { status: 201 });
+        // Retourner le token JWT à l'utilisateur
+        return new Response(JSON.stringify({ mess: "user created !" }), { status: 201 });
+    }
+    catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    }
 }

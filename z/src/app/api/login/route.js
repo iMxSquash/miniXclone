@@ -1,28 +1,34 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { connectToDatabase } from "../../../service/api/mongodb";
+import connect from '../../../../libs/mongodb';
+import User from '../../../../models/user.model';
 
 export async function POST(req) {
-  const { email, password } = await req.json();
+    try {
+        const { email, password } = await req.json();
 
-  // Vérifier si l'utilisateur existe
-  const db = await connectToDatabase();
-  const user = await db.collection('users').findOne({ email });
-  
-  if (!user) {
-    return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
-  }
+        // Vérifier si l'utilisateur existe
+        await connect();
+        const user = await User.findOne({ email });
 
-  // Comparer le mot de passe
-  const isMatch = await bcrypt.compare(password, user.password);
+        if (!user) {
+            return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
+        }
 
-  if (!isMatch) {
-    return new Response(JSON.stringify({ error: 'Invalid password' }), { status: 400 });
-  }
+        // Comparer le mot de passe
+        const isMatch = await bcrypt.compare(password, user.password);
 
-  // Générer un token JWT
-  const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        if (!isMatch) {
+            return new Response(JSON.stringify({ error: 'Invalid password' }), { status: 400 });
+        }
 
-  // Retourner le token JWT à l'utilisateur
-  return new Response(JSON.stringify({ token }), { status: 200 });
+        // Générer un token JWT
+        const token = jwt.sign({ id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+        // Retourner le token JWT à l'utilisateur
+        return new Response(JSON.stringify({ token }), { status: 200 });
+    }
+    catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    }
 }

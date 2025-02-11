@@ -1,13 +1,9 @@
-import Link from "next/link";
-import { URL } from '../utils/constant/utls';
+import LoginForm from '../components/container/loginform';
 
-export default async function Login() {
-
+export default function LoginPage() {
   return (
     <>
-      <div className="bg-blue-600">
-        <p>Login work</p>
-      </div>
+      <LoginForm />
     </>
   );
 }
