@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { registerUser } from '../../utils/auth';
 
 export default function SignupForm() {
@@ -16,13 +17,14 @@ export default function SignupForm() {
 
   return (
     <div className='text-black'>
-      <h1>Login</h1>
+      <h1>Signup</h1>
       <form onSubmit={handleSignup} className='flex flex-col gap-4'>
         <input type="text" name="name" required />
         <input type="email" name="email" required />
         <input type="password" name="password" required />
         <button type="submit">Sign up</button>
       </form>
+      <Link href='/login'>login</Link>
     </div>
   );
 }

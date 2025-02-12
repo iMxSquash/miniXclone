@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link';
 import { loginUser } from '../../utils/auth';
 
 export default function LoginForm() {
@@ -20,6 +21,7 @@ export default function LoginForm() {
         <input type="password" name="password" required />
         <button type="submit">Login</button>
       </form>
+      <Link href='/signup'>signup</Link>
     </div>
   );
 }

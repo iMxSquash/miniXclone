@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { URL } from '../utils/constant/utls';
+import withAuth from "../components/withAuth";
 
 const Messages = () => {
 
