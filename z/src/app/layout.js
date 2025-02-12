@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <html lang="fr">
-        <body className='bg-black text-text-dark'>
+        <body>
           <Navbar />
           {children}
         </body>

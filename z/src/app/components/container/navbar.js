@@ -19,49 +19,38 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="h-[5dvh] overflow-hidden">
-                <nav className="flex justify-between items-center p-4 bg-blue-500">
-                    {user ? (
-                        <>
-                            <Link href="/">
-                                Z
-                            </Link>
-                            <div className="flex space-x-4">
+            {user && (
+                <div className="h-[5dvh] overflow-hidden">
+                    <nav className="flex justify-between items-center p-4 bg-blue-500">
+                        <Link href="/">
+                            Z
+                        </Link>
+                        <div className="flex space-x-4">
 
-                                <Link href="/messages">
-                                    Messages
-                                </Link>
-                                <Link href="/search">
-                                    Search
-                                </Link>
-                                <button onClick={handleLogout}>Logout</button>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/login">
-                                Login
+                            <Link href="/messages">
+                                Messages
                             </Link>
-                            <Link href="/signup">
-                                Signup
+                            <Link href="/search">
+                                Search
                             </Link>
-                        </>
+                            <button onClick={handleLogout}>Logout</button>
+                        </div>
+                    </nav>
+
+                    {user && (
+                        <div className='p-4 bg-red-300'>
+                            <h2>Informations utilisateur :</h2>
+                            <ul>
+                                {Object.entries(user).map(([key, value]) => (
+                                    <li key={key}>
+                                        <strong>{key}</strong>: {value?.toString()}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )}
-                </nav>
-
-                {user && (
-                    <div className='p-4 bg-red-300'>
-                        <h2>Informations utilisateur :</h2>
-                        <ul>
-                            {Object.entries(user).map(([key, value]) => (
-                                <li key={key}>
-                                    <strong>{key}</strong>: {value?.toString()}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
         </>
     )
 }
