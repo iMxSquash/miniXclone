@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { URL } from '../../utils/constant/utls';
 
-export default async function UserId() {
-
+const UserId = () => {
     return (
         <>
             <div className="bg-blue-600">
@@ -11,3 +10,5 @@ export default async function UserId() {
         </>
     );
 }
+
+export default withAuth(UserId);

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { URL } from '../utils/constant/utls';
 import SignupForm from "../components/container/signupform";
 
-export default async function Signup() {
+const Signup = () => {
 
   return (
     <>
@@ -12,3 +12,5 @@ export default async function Signup() {
     </>
   );
 }
+
+export default Signup;

@@ -6,8 +6,9 @@ export async function POST(req) {
     try {
         const { name, email, password } = await req.json();
 
-        // Vérifier si l'email est déjà pris
         await connect();
+        
+        // Vérifier si l'email est déjà pris
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { URL } from '../../utils/constant/utls';
 
-export default async function TweetId() {
+const TweetId = () => {
 
     return (
         <>
@@ -11,3 +11,5 @@ export default async function TweetId() {
         </>
     );
 }
+
+export default withAuth(TweetId);

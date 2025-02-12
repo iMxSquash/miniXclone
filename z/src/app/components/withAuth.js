@@ -1,13 +1,18 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { useEffect } from "react";
-import { cookies } from 'next/headers';
 
 export default function withAuth(Component) {
     return function WithAuth(props) {
         useEffect(() => {
-            if (!cookies.get('access_token')) {
-                window.location.href = "/login";
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("authToken="))
+                ?.split("=")[1];
+
+            if (!token) {
+                redirect("/login");
             }
         }, []);
 
