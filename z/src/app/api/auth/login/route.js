@@ -1,15 +1,18 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import connect from '../../../../libs/mongodb';
-import User from '../../../../models/user.model';
+import connect from '../../../../../libs/mongodb';
+import User from '../../../../../models/user.model';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 
 export async function POST(req) {
     try {
         const { email, password } = await req.json();
 
-        // Vérifier si l'utilisateur existe
         await connect();
+        
+        // Vérifier si l'utilisateur existe
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -28,15 +31,19 @@ export async function POST(req) {
 
         // Stocke le token dans un cookie sécurisé
         cookies().set({
-            name: 'access_token',
+            name: 'authToken',
             value: token,
             httpOnly: true,
             path: '/',
             maxAge: 86400,
         });
 
+        console.log("cookies 2", cookies().get('authToken'));
+        
         // Supprime le mot de passe de la réponse
         const { password: _, ...userData } = user._doc;
+        console.log("userdata", userData);
+        
 
         return NextResponse.json(userData, { status: 200 });
     }

@@ -17,8 +17,9 @@ export default function LoginForm() {
     <div className='text-black'>
       <h1>Login</h1>
       <form onSubmit={handleLogin} className='flex flex-col gap-4'>
-        <input type="email" name="email" required />
-        <input type="password" name="password" required />
+        <label htmlFor="email">Email</label>
+        <input type="email" name="email" placeholder='Votre email' required />
+        <input type="password" name="password" placeholder='Votre mot de passe' required />
         <button type="submit">Login</button>
       </form>
       <Link href='/signup'>signup</Link>

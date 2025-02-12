@@ -1,5 +1,8 @@
+import { redirect } from "next/navigation";
+import jwt from "jsonwebtoken";
+
 export const loginUser = async (email, password) => {
-    const response = await fetch('/api/login', {
+    const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -8,26 +11,24 @@ export const loginUser = async (email, password) => {
     });
 
     const data = await response.json();
+    console.log("data", data);
+    console.log("cookies 1", document.cookies);
 
-    if (data.token) {
-        // Stocker le token dans un cookie
-        document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // Le token expirera après 1 jour
-        window.location.href = '/'; // Rediriger vers la page d'accueil ou une page protégée
+    if (data.email) {
+        redirect('/');
     } else {
         console.log(data.error); // Gérer l'erreur
     }
 };
 
 export const logoutUser = () => {
-    // Supprimer le cookie
-    document.cookie = 'authToken=; path=/; max-age=0';
+    document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
-    // Rediriger vers la page de connexion
-    window.location.href = '/login';
+    redirect('/login');
 };
 
 export const registerUser = async (name, email, password) => {
-    const response = await fetch('/api/signup', {
+    const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -38,10 +39,16 @@ export const registerUser = async (name, email, password) => {
     const data = await response.json();
 
     if (data.token) {
-        // Stocker le token dans un cookie
-        document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // Le token expirera après 1 jour
-        window.location.href = '/'; // Rediriger vers la page d'accueil ou une page protégée
+        redirect('/');
     } else {
         console.log(data.error); // Gérer l'erreur
     }
 };
+
+export function getUserFromToken(token) {
+    try {
+      return jwt.verify(token, process.env.JWT_SECRET); // Vérifie et extrait les données du token
+    } catch (error) {
+      return null;
+    }
+  }

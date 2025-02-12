@@ -1,21 +1,26 @@
 "use client";
 
-import { redirect } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function withAuth(Component) {
     return function WithAuth(props) {
-        useEffect(() => {
-            const token = document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("authToken="))
-                ?.split("=")[1];
+        const router = useRouter();
+        const [user, setUser] = useState(null);
 
-            if (!token) {
-                redirect("/login");
-            }
+        useEffect(() => {
+            fetch("/api/auth/me", { credentials: "include" })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (!data.user) {
+                        router.push("/login");
+                    } else {
+                        setUser(data.user);
+                    }
+                })
+                .catch(() => router.push("/login"));
         }, []);
 
-        return <Component {...props} />;
+        return user ? <Component {...props} /> : null;
     };
 }

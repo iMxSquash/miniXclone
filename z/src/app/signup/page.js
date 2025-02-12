@@ -1,10 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { URL } from '../utils/constant/utls';
 import SignupForm from "../components/container/signupform";
 
-const Signup = () => {
+const Signup = async () => {
 
   return (
     <>

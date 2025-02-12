@@ -19,9 +19,12 @@ export default function SignupForm() {
     <div className='text-black'>
       <h1>Signup</h1>
       <form onSubmit={handleSignup} className='flex flex-col gap-4'>
-        <input type="text" name="name" required />
-        <input type="email" name="email" required />
-        <input type="password" name="password" required />
+        <label htmlFor="name">Pseudo</label>
+        <input type="text" name="name" placeholder='Votre pseudo' required />
+        <label htmlFor="email">Email</label>
+        <input type="email" name="email" placeholder='Votre email' required />
+        <label htmlFor="password">Password</label>
+        <input type="password" name="password" placeholder='Votre mot de passe' required />
         <button type="submit">Sign up</button>
       </form>
       <Link href='/login'>login</Link>

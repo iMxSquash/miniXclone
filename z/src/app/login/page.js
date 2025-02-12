@@ -1,5 +1,3 @@
-"use client";
-
 import LoginForm from '../components/container/loginform';
 
 const LoginPage = () => {
