@@ -1,17 +1,8 @@
 import Head from "next/head";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/container/navbar";
+import { UserProvider } from "./context/UserContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Z",
@@ -20,20 +11,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <>
+    <UserProvider>
       <Head>
         <title>{metadata.title}</title>
         <meta name="description" content={metadata.description} />
         <link rel="icon" href="/favicon.ico" />
-        <style>{geistSans.styles}</style>
-        <style>{geistMono.styles}</style>
       </Head>
       <html lang="fr">
-        <body className='bg-white'>
+        <body className='bg-black text-text-dark'>
           <Navbar />
           {children}
         </body>
       </html>
-    </>
+    </UserProvider>
   );
 }
+
+

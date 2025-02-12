@@ -16,7 +16,7 @@ export default function SignupForm() {
   };
 
   return (
-    <div className='text-black'>
+    <div className=''>
       <h1>Signup</h1>
       <form onSubmit={handleSignup} className='flex flex-col gap-4'>
         <label htmlFor="name">Pseudo</label>

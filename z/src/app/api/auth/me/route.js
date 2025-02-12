@@ -9,7 +9,7 @@ export async function GET(req) {
         await connect();
 
         // lire le token dans les cookies
-        const token = cookies().get("authToken")?.value;
+        const token = (await cookies()).get("authToken")?.value;
         if (!token) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -17,7 +17,7 @@ export async function GET(req) {
         // vérifier et décoder le token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // récupérer l'utilisateur dans la base de données
+        // récupérer l'utilisateur dans la base de données en retirant le mot de passe
         const user = await User.findById(decoded.id).select("-password");
 
         if (!user) {

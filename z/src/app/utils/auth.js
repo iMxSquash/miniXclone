@@ -15,9 +15,9 @@ export const loginUser = async (email, password) => {
     console.log("cookies 1", document.cookies);
 
     if (data.email) {
-        redirect('/');
+        window.location.href = '/';
     } else {
-        console.log(data.error); // gérer l'erreur
+        console.log(data.error);
     }
 };
 

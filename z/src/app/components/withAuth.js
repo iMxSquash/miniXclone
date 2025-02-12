@@ -21,6 +21,8 @@ export default function withAuth(Component) {
                 .catch(() => router.push("/login"));
         }, []);
 
-        return user ? <Component {...props} /> : null;
+        return (
+            user ? <Component {...props} /> : null
+        );
     };
 }
