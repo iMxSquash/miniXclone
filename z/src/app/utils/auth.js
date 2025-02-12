@@ -17,7 +17,7 @@ export const loginUser = async (email, password) => {
     if (data.email) {
         redirect('/');
     } else {
-        console.log(data.error); // Gérer l'erreur
+        console.log(data.error); // gérer l'erreur
     }
 };
 
@@ -41,13 +41,13 @@ export const registerUser = async (name, email, password) => {
     if (data.token) {
         redirect('/');
     } else {
-        console.log(data.error); // Gérer l'erreur
+        console.log(data.error); // gérer l'erreur
     }
 };
 
 export function getUserFromToken(token) {
     try {
-      return jwt.verify(token, process.env.JWT_SECRET); // Vérifie et extrait les données du token
+      return jwt.verify(token, process.env.JWT_SECRET); // vérifie et extrait les données du token
     } catch (error) {
       return null;
     }

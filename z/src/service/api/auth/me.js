@@ -6,7 +6,7 @@ export default function handler(req, res) {
         return res.status(405).json({ message: "Méthode non autorisée" });
     }
 
-    // 🔥 Récupérer les cookies
+    // récupérer les cookies
     const cookies = parse(req.headers.cookie || "");
     const token = cookies.token;
 
