@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { URL } from '../utils/constant/utls';
 import SignupForm from "../components/container/signupform";
