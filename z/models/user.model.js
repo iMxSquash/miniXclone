@@ -20,6 +20,47 @@ const UserSchema = new mongoose.Schema({
     avatar: {
         type: String,
         required: false,
+        default: '../public/defaultAvatar.png',
+    },
+    banner: {
+        type: String,
+        required: false,
+        default: '../public/defaultBanner.png',
+    },
+    followers: {
+        type: Array,
+        required: false,
+        default: [],
+    },
+    following: {
+        type: Array,
+        required: false,
+        default: [],
+    },
+    likes: {
+        type: Array,
+        required: false,
+        default: [],
+    },
+    retweets: {
+        type: Array,
+        required: false,
+        default: [],
+    },
+    tweets: {
+        type: Array,
+        required: false,
+        default: [],
+    },
+    bio: {
+        type: String,
+        required: false,
+        default: '',
+    },
+    location: {
+        type: String,
+        required: false,
+        default: '',
     },
 }, {
     timestamps: true,
