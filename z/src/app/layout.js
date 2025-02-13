@@ -18,9 +18,11 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <html lang="fr">
-        <body className="flex">
-          <Navbar />
-          {children}
+        <body>
+          <main className="flex max-w-4xl mx-auto border-r border-border-dark">
+            <Navbar />
+            {children}
+          </main>
         </body>
       </html>
     </UserProvider>

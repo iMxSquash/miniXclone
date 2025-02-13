@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useUser } from "@/app/context/UserContext";
 import Image from "next/image";
 
-const UploadAvatar = () => {
+const UploadBanner = () => {
     const { user, login } = useUser();
-    const [preview, setPreview] = useState(user?.avatar || "/uploads/defaultAvatar.png");
+    const [preview, setPreview] = useState(user?.banner || "/uploads/defaultBanner.png");
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -26,12 +26,12 @@ const UploadAvatar = () => {
 
             // Mettre à jour l'utilisateur dans le contexte
             if (user) {
-                login({ ...user, avatar: url });
+                login({ ...user, banner: url });
 
-                // Enregistrer l'avatar dans la DB 
+                // Enregistrer la banner dans la DB 
                 await fetch(`/api/user/${user._id}`, {
                     method: "PUT",
-                    body: JSON.stringify({ avatar: url }),
+                    body: JSON.stringify({ banner: url }),
                     headers: { "Content-Type": "application/json" },
                 });
             }
@@ -39,13 +39,11 @@ const UploadAvatar = () => {
     };
 
     return (
-        <div className="relative w-24 h-24 -mb-12 ml-6">
-            <Image
+        <div className="relative w-full max-h-96 cover -mb-12">
+            <img
                 src={preview}
-                alt="Avatar"
-                width={96}
-                height={96}
-                className="w-full h-full rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity border-4 border-background"
+                alt="Banner"
+                className="object-cover cursor-pointer hover:opacity-80 transition-opacity"
             />
             <input
                 type="file"
@@ -57,4 +55,4 @@ const UploadAvatar = () => {
     );
 };
 
-export default UploadAvatar;
+export default UploadBanner;

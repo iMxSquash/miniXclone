@@ -21,6 +21,7 @@ const config = {
           light: "#E7E9EA",
         },
         background: {
+          DEFAULT: '#0a0a0a',
           light: "#F7F9F9",
           dark: "#15202B",
         },

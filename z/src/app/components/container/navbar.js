@@ -45,38 +45,38 @@ export default function Navbar() {
     return (
         <>
             {user && (
-                <div className="h-[100dvh] w-28 border-r border-secondary p-2 pb-12 flex flex-col justify-between items-center">
+                <div className="h-[100dvh] border-r border-border-dark p-2 pb-12 flex flex-col justify-between items-center">
                     <nav className="flex flex-col items-center gap-8 p-2">
                         <button onClick={() => goHome()}>
                             <Image src={logo} alt='logo' className='w-5 fill-foreground' />
                         </button>
-                        <div className="flex flex-col items-center gap-4">
+                        <div className="flex flex-col items-center xl:items-start gap-4">
                             <button
                                 className={`flex items-center space-x-2 p-2 ${active === "home" ? "text-secondary-light" : "text-secondary"} hover:bg-secondary-dark/20 rounded-full`}
                                 onClick={() => goHome()}
                             >
                                 <Home size={`${active === "home" ? "30" : "24"}`} className='transition-all' />
-                                <span className='hidden xl:flex'>Accueil</span>
+                                <span className={`hidden text-nowrap ${active === "home" ? "font-bold" : "font-normal"} transition-all xl:flex`}>Accueil</span>
                             </button>
                             <button
                                 className={`flex items-center space-x-2 p-2 ${active === "search" ? "text-secondary-light" : "text-secondary"} hover:bg-secondary-dark/20 rounded-full`}
                                 onClick={() => goSearch()}
                             >
                                 <Search size={`${active === "search" ? "30" : "24"}`} className='transition-all' />
-                                <span className='hidden xl:flex'>Rechercher</span>
+                                <span className={`hidden text-nowrap ${active === "search" ? "font-bold" : "font-normal"} transition-all xl:flex`}>Rechercher</span>
                             </button>
                             <button
                                 className={`flex items-center space-x-2 p-2 ${active === "messages" ? "text-secondary-light" : "text-secondary"} hover:bg-secondary-dark/20 rounded-full`}
                                 onClick={() => goMessage()}
                             >
                                 <MessageSquareText size={`${active === "messages" ? "30" : "24"}`} className='transition-all' />
-                                <span className='hidden xl:flex'>Messages</span>
+                                <span className={`hidden text-nowrap ${active === "messages" ? "font-bold" : "font-normal"} transition-all xl:flex`}>Messages</span>
                             </button>
                             <button
                                 className={`flex items-center space-x-2 p-2 ${active === "user" ? "text-secondary-light" : "text-secondary"} hover:bg-secondary-dark/20 rounded-full`}
                                 onClick={() => goUser()}>
                                 <User size={`${active === "user" ? "30" : "24"}`} className='transition-all' />
-                                <span className='hidden xl:flex'>Mon profile</span>
+                                <span className={`hidden text-nowrap ${active === "user" ? "font-bold" : "font-normal"} transition-all xl:flex`}>Mon profile</span>
                             </button>
                         </div>
                     </nav>
