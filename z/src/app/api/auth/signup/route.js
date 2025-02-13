@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb';
 import connect from '../../../../../libs/mongodb';
 import User from '../../../../../models/user.model';
 
@@ -7,7 +8,7 @@ export async function POST(req) {
         const { name, email, password } = await req.json();
 
         await connect();
-        
+
         // vérifier si l'email est déjà pris
         const existingUser = await User.findOne({ email });
 
@@ -19,7 +20,7 @@ export async function POST(req) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // insérer le nouvel utilisateur dans la base de données
-        const newUser = { name, email, password: hashedPassword };
+        const newUser = { _id: new ObjectId(), name, email, password: hashedPassword };
         const result = await User.insertOne(newUser);
 
         // retourner le token JWT à l'utilisateur
