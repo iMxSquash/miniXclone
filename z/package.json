@@ -13,6 +13,7 @@
     "bcryptjs": "^2.4.3",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.475.0",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.0",
     "mongoose-unique-validator": "^4.0.1",
