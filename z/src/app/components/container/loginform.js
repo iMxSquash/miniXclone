@@ -14,7 +14,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className='w-[20vw] flex flex-col gap-8'>
+    <div className='w-full md:w-[30vw] lg:w-[20vw] flex flex-col gap-8'>
       <h1 className='font-black text-2xl'>Connectez-vous à Z.</h1>
       <form onSubmit={handleLogin} className='flex flex-col gap-4'>
         <div className='relative'>

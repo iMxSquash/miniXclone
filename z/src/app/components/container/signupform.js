@@ -15,7 +15,7 @@ export default function SignupForm() {
   };
 
   return (
-    <div className='w-[20vw] flex flex-col gap-8'>
+    <div className='w-full md:w-[30vw] lg:w-[20vw] flex flex-col gap-8'>
       <h1 className='font-black text-2xl'>Inscrivez-vous à Z.</h1>
       <form onSubmit={handleSignup} className='flex flex-col gap-4'>
         <div className='relative'>
