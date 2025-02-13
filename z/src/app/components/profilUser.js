@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useUser } from "@/app/context/UserContext";
+import UploadAvatar from "./container/uploadAvatar";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -13,6 +14,7 @@ const ProfilUser = ({ userGeted }) => {
             <div className="font-bold text-2xl">
                 {user.name}
             </div>
+            <UploadAvatar />
         </div>
     ) : (
         <>

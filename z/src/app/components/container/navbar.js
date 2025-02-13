@@ -11,6 +11,7 @@ import { Home, HomeIcon, MessageSquareText, Search, SearchIcon, User } from 'luc
 export default function Navbar() {
     const { user, logout } = useUser();
     const [active, setActive] = useState("home");
+    const [showLogout, setShowLogout] = useState(false);
 
     const handleLogout = async () => {
         await fetch("/api/auth/logout", {
@@ -44,7 +45,7 @@ export default function Navbar() {
     return (
         <>
             {user && (
-                <div className="h-[100dvh] w-28 border-r border-secondary p-2">
+                <div className="h-[100dvh] w-28 border-r border-secondary p-2 pb-12 flex flex-col justify-between items-center">
                     <nav className="flex flex-col items-center gap-8 p-2">
                         <button onClick={() => goHome()}>
                             <Image src={logo} alt='logo' className='w-5 fill-foreground' />
@@ -73,16 +74,35 @@ export default function Navbar() {
                             </button>
                             <button
                                 className={`flex items-center space-x-2 p-2 ${active === "user" ? "text-secondary-light" : "text-secondary"} hover:bg-secondary-dark/20 rounded-full`}
-                                onClick={() => goUser()}
-                            >
+                                onClick={() => goUser()}>
                                 <User size={`${active === "user" ? "30" : "24"}`} className='transition-all' />
                                 <span className='hidden xl:flex'>Mon profile</span>
                             </button>
-                            <button onClick={handleLogout}>Logout</button>
                         </div>
                     </nav>
+                    <div className="relative">
+                        <Image
+                            src={user.avatar || "/uploads/defaultAvatar.png"}
+                            width={40}
+                            height={40}
+                            alt="Avatar"
+                            className="rounded-full cursor-pointer"
+                            onClick={() => setShowLogout(!showLogout)}
+                        />
+                        {showLogout && (
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2">
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-secondary-dark text-white px-4 py-2 rounded shadow-lg hover:bg-secondary-dark/80"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            )}
+            )
+            }
         </>
     )
 }
