@@ -5,8 +5,11 @@ import { URL } from '../utils/constant/utls';
 import withAuth from "../components/withAuth";
 import useSocket from "../components/useSocket";
 import { useEffect, useState } from "react";
+import { useUser } from "../context/UserContext";
 
 const Messages = () => {
+  const { user } = useUser();
+
   const socket = useSocket();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -35,10 +38,9 @@ const Messages = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">Chat en temps réel</h1>
       <ul>
         {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
+          <li key={index}>{user.name} - {msg}</li>
         ))}
       </ul>
       <input

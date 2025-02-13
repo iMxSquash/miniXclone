@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <html lang="fr">
-        <body>
+        <body className="flex">
           <Navbar />
           {children}
         </body>

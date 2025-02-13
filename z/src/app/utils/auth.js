@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
+import { useUser } from "../context/UserContext";
 
 export const loginUser = async (email, password) => {
+
     const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -47,8 +49,8 @@ export const registerUser = async (name, email, password) => {
 
 export function getUserFromToken(token) {
     try {
-      return jwt.verify(token, process.env.JWT_SECRET); // vérifie et extrait les données du token
+        return jwt.verify(token, process.env.JWT_SECRET); // vérifie et extrait les données du token
     } catch (error) {
-      return null;
+        return null;
     }
-  }
+}
