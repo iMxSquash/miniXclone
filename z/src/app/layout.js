@@ -5,8 +5,8 @@ import { UserProvider } from "./context/UserContext";
 
 
 export const metadata = {
-  title: "Z",
-  description: "Z. C'est ce qu'il se passe /Z",
+  title: "Z. C'est ce qu'il se passe /Z",
+  description: "Des dernières actualités et des divertissements aux sports et à la politique, accédez à tous les commentaires en direct pour ne rien manquer.",
 };
 
 export default function RootLayout({ children }) {
