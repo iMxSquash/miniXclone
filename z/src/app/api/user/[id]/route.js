@@ -7,7 +7,7 @@ export async function GET(req, { params }) {
         await connect();
 
         // récupérer l'utilisateur dans la base de données en retirant le mot de passe
-        const { id } = params;
+        const { id } = await params;
         const user = await User.findById(id).select("-password");
 
         if (!user) {
