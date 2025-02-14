@@ -10,7 +10,8 @@ const FollowButton = ({ userId }) => {
 
     useEffect(() => {
         if (user) {
-            setIsFollowing(user.following.includes(userId));
+            const followingIds = user.following.map(id => id.toString());
+            setIsFollowing(followingIds.includes(userId));
         }
     }, [user]);
 

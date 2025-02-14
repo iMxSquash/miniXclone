@@ -9,6 +9,7 @@ import { Calendar } from "lucide-react";
 import Image from "next/image";
 import withAuth from "./withAuth";
 import FollowButton from "./followBtn";
+import FollowListModal from "./followListModal";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -17,6 +18,8 @@ const ProfilUser = ({ userGeted }) => {
     const [editName, setEditName] = useState(user?.name || '');
     const [editLocation, setEditLocation] = useState(user?.location || '');
     const [editBio, setEditBio] = useState(user?.bio || '');
+
+    const [showModal, setShowModal] = useState(null);
 
     const openEditProfile = () => setIsEditProfileOpen(true);
     const closeEditProfile = () => setIsEditProfileOpen(false);
@@ -79,10 +82,10 @@ const ProfilUser = ({ userGeted }) => {
                     A rejoint l'application le {new Date(user.createdAt).toLocaleDateString('fr-FR')}
                 </div>
                 <div className="flex gap-4">
-                    <div className="text-secondary">
+                    <div className="text-secondary hover:underline" onClick={() => setShowModal("following")}>
                         <span className="text-secondary-light">{user.following?.length || 0}</span> following
                     </div>
-                    <div className="text-secondary">
+                    <div className="text-secondary hover:underline" onClick={() => setShowModal("followers")}>
                         <span className="text-secondary-light">{user.followers?.length || 0}</span> followers
                     </div>
                 </div>
@@ -148,6 +151,15 @@ const ProfilUser = ({ userGeted }) => {
                     </div>
                 )
             }
+            {
+                showModal && (
+                    <FollowListModal
+                        userId={user._id}
+                        type={showModal}
+                        onClose={() => setShowModal(null)}
+                    />
+                )
+            }
         </div >
     ) : (
         <div className="flex flex-col gap-2 px-4">
@@ -195,14 +207,23 @@ const ProfilUser = ({ userGeted }) => {
                     A rejoint l'application le {new Date(userGeted.user.createdAt).toLocaleDateString('fr-FR')}
                 </div>
                 <div className="flex gap-4">
-                    <div className="text-secondary">
+                    <div className="text-secondary hover:underline" onClick={() => setShowModal("following")}>
                         <span className="text-secondary-light">{userGeted.user.following?.length || 0}</span> following
                     </div>
-                    <div className="text-secondary">
+                    <div className="text-secondary hover:underline" onClick={() => setShowModal("followers")}>
                         <span className="text-secondary-light">{userGeted.user.followers?.length || 0}</span> followers
                     </div>
                 </div>
             </div>
+            {
+                showModal && (
+                    <FollowListModal
+                        userId={userGeted.user._id}
+                        type={showModal}
+                        onClose={() => setShowModal(null)}
+                    />
+                )
+            }
         </div>
     );
 };

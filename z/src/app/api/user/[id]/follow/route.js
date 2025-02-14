@@ -25,19 +25,23 @@ export async function PUT(req, { params }) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
+        // Convertir id et userId en ObjectId
+        const userIdObject = new mongoose.Types.ObjectId(userId);
+        const idObject = new mongoose.Types.ObjectId(id);
+
         // vérifier si l'utilisateur suit déjà la personne
-        const isFollowing = currentUser.following.includes(id);
+        const isFollowing = currentUser.following.includes(idObject);
 
         if (isFollowing) {
             // unfollow
-            await User.findByIdAndUpdate(userId, { $pull: { following: id } });
-            await User.findByIdAndUpdate(id, { $pull: { followers: userId } });
+            await User.findByIdAndUpdate(userIdObject, { $pull: { following: idObject } });
+            await User.findByIdAndUpdate(idObject, { $pull: { followers: userIdObject } });
 
             return NextResponse.json({ success: true, message: "Unfollowed" });
         } else {
             // follow
-            await User.findByIdAndUpdate(userId, { $push: { following: id } });
-            await User.findByIdAndUpdate(id, { $push: { followers: userId } });
+            await User.findByIdAndUpdate(userIdObject, { $push: { following: idObject } });
+            await User.findByIdAndUpdate(idObject, { $push: { followers: userIdObject } });
 
             return NextResponse.json({ success: true, message: "Followed" });
         }
