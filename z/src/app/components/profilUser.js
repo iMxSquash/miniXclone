@@ -7,6 +7,7 @@ import UploadBanner from "./container/uploadBanner";
 import { useState } from "react";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
+import withAuth from "./withAuth";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -208,4 +209,4 @@ const ProfilUser = ({ userGeted }) => {
     );
 };
 
-export default ProfilUser;
+export default withAuth(ProfilUser);
