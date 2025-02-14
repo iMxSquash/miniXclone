@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 export async function GET(req, { params }) {
     await connect();
-    const { id, type } = params;
+    const { id, type } = await params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
@@ -16,15 +16,13 @@ export async function GET(req, { params }) {
     }
 
     const user = await User.findById(id).populate({
-        path: type,  // Dynamique : "followers" ou "following"
+        path: type,  // dynamique : "followers" ou "following"
         select: "name avatar _id",
     });
 
     if (!user) {
         return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-
-    console.log(`${type} récupérés:`, user[type]); // Vérifie que ça affiche bien des objets
 
     return NextResponse.json({ [type]: user[type] });
 }

@@ -48,7 +48,7 @@ const FollowListModal = ({ userId, type, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="relative bg-background text-secondary-light p-5 rounded-lg w-96 h-fit">
+            <div className="relative bg-background text-secondary-light p-5 rounded-lg w-96 h-[80dvh] overflow-auto">
                 <h2 className="text-xl font-bold">{type === "followers" ? "Followers" : "Following"}</h2>
                 <button onClick={onClose} className="absolute top-2 right-2 text-secondary-light">✖</button>
 
@@ -59,7 +59,7 @@ const FollowListModal = ({ userId, type, onClose }) => {
                 ) : (
                     <ul className="mt-3">
                         {users.map((user) => (
-                            <li key={`user-${user.user._id}`} className="flex items-center gap-3 p-2 border-b">
+                            <li key={`user-${user.user._id}`} className="flex items-center gap-3 py-2 border-b border-border-dark">
                                 <img src={user.user.avatar} alt={user.user.name} className="w-10 h-10 rounded-full" />
                                 <span>{user.user.name}</span>
                             </li>
