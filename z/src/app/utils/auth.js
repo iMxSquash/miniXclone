@@ -40,10 +40,10 @@ export const registerUser = async (name, email, password) => {
 
     const data = await response.json();
 
-    if (data.token) {
-        redirect('/');
+    if (response.ok) {
+        redirect('/login');
     } else {
-        console.log(data.error); // gérer l'erreur
+        console.log(data.error);
     }
 };
 

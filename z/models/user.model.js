@@ -20,12 +20,12 @@ const UserSchema = new mongoose.Schema({
     avatar: {
         type: String,
         required: false,
-        default: '../public/defaultAvatar.png',
+        default: '/uploads/defaultAvatar.png',
     },
     banner: {
         type: String,
         required: false,
-        default: '../public/defaultBanner.png',
+        default: '/uploads/defaultBanner.png',
     },
     followers: {
         type: Array,

@@ -6,6 +6,7 @@ import UploadAvatar from "./container/uploadAvatar";
 import UploadBanner from "./container/uploadBanner";
 import { useState } from "react";
 import { Calendar } from "lucide-react";
+import Image from "next/image";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -147,16 +148,63 @@ const ProfilUser = ({ userGeted }) => {
             }
         </div >
     ) : (
-        <>
-            {
-                userGeted.user &&
-                Object.entries(userGeted.user).map(([key, value]) => (
-                    <div key={key} className="flex flex-col gap-2">
-                        <strong>{key}:</strong> {typeof value === "object" ? JSON.stringify(value) : value}
+        <div className="flex flex-col gap-2 px-4">
+            <div className="flex flex-col">
+                <div className="font-bold text-2xl">
+                    {userGeted.user.name}
+                </div>
+                <div className="text-secondary">
+                    {userGeted.user.posts?.length || 0} posts
+                </div>
+            </div>
+            <div className="w-full max-h-96 cover -mb-12">
+                <img
+                    src={userGeted.user?.banner || "/uploads/defaultBanner.png"}
+                    alt="Banner"
+                    className="object-cover"
+                />
+            </div>
+            <div className="w-24 h-24 -mb-12 ml-6">
+                <Image
+                    src={userGeted.user?.avatar || "/uploads/defaultAvatar.png"}
+                    alt="Avatar"
+                    width={96}
+                    height={96}
+                    className="w-full h-full rounded-full object-cover border-4 border-background"
+                />
+            </div>
+            <div className="flex flex-col gap-3">
+                <div className="flex justify-end">
+                    <button className="text-secondary-light border border-secondary rounded-full px-4 py-2 font-bold"
+                        onClick={() => follow()}>
+                        Suivre
+                    </button>
+                </div>
+                <div className="flex flex-col">
+                    <div className="font-bold text-xl">
+                        {userGeted.user.name}
                     </div>
-                ))
-            }
-        </>
+                    <div className="text-secondary">
+                        {userGeted.user.location}
+                    </div>
+                </div>
+                <div className="">
+                    {userGeted.user.bio}
+                </div>
+                <div className="text-secondary flex gap-1 items-center">
+                    <Calendar size={16} />
+                    A rejoint l'application le {new Date(userGeted.user.createdAt).toLocaleDateString('fr-FR')}
+                </div>
+                <div className="flex gap-4">
+                    <div className="text-secondary">
+                        <span className="text-secondary-light">{userGeted.user.following?.length || 0}</span> following
+                    </div>
+                    <div className="text-secondary">
+                        <span className="text-secondary-light">{userGeted.user.followers?.length || 0}</span> followers
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };
 
