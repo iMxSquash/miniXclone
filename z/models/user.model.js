@@ -27,16 +27,8 @@ const UserSchema = new mongoose.Schema({
         required: false,
         default: '/uploads/defaultBanner.png',
     },
-    followers: {
-        type: Array,
-        required: false,
-        default: [],
-    },
-    following: {
-        type: Array,
-        required: false,
-        default: [],
-    },
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     likes: {
         type: Array,
         required: false,

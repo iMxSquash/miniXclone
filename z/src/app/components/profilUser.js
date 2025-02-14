@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import withAuth from "./withAuth";
+import FollowButton from "./followBtn";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -176,10 +177,7 @@ const ProfilUser = ({ userGeted }) => {
             </div>
             <div className="flex flex-col gap-3">
                 <div className="flex justify-end">
-                    <button className="text-secondary-light border border-secondary rounded-full px-4 py-2 font-bold"
-                        onClick={() => follow()}>
-                        Suivre
-                    </button>
+                    <FollowButton userId={userGeted.user._id} />
                 </div>
                 <div className="flex flex-col">
                     <div className="font-bold text-xl">
