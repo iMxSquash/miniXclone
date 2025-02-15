@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
+import useSocket from "./useSocket";
 
 export default function AddTweet() {
     const { user } = useUser();
+    const socket = useSocket();
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
     const [previews, setPreviews] = useState([]);
@@ -24,48 +26,43 @@ export default function AddTweet() {
         }
 
         setLoading(true);
-        const mediaUrls = [];
-
-        // Upload des images
-        for (const image of images) {
-            const formData = new FormData();
-            formData.append("file", image);
-
-            const res = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (res.ok) {
-                const { url } = await res.json();
-                mediaUrls.push(url);
-            } else {
-                setMessage("Erreur lors de l'upload des médias.");
-                setLoading(false);
-                return;
-            }
-        }
-
-        const formData = new FormData();
-        formData.append("userId", user._id);
-        formData.append("content", content);
-        // Envoyer les URLs des médias en tant qu'array
-        formData.append("mediaFiles", JSON.stringify(mediaUrls));
-
         try {
-            const res = await fetch("/api/tweet", {
-                method: "POST",
-                body: formData,
-            });
+            // Upload des images
+            const mediaUrls = [];
+            for (const image of images) {
+                const formData = new FormData();
+                formData.append("file", image);
+                const res = await fetch("/api/upload", { method: "POST", body: formData });
+                if (res.ok) {
+                    const { url } = await res.json();
+                    mediaUrls.push(url);
+                }
+            }
 
+            // Créer le tweet
+            const formData = new FormData();
+            formData.append("userId", user._id);
+            formData.append("content", content);
+            formData.append("mediaFiles", JSON.stringify(mediaUrls));
+
+            const res = await fetch("/api/tweet", { method: "POST", body: formData });
             const data = await res.json();
-            if (res.ok) {
-                setMessage("Tweet ajouté avec succès !");
+
+            if (res.ok && socket) {
+                // Émettre le tweet comme dans messages/page.js
+                const tweetToEmit = {
+                    ...data.tweet,
+                    author: {
+                        _id: user._id,
+                        name: user.name,
+                        avatar: user.avatar
+                    }
+                };
+                socket.emit("newTweet", tweetToEmit);
+
                 setContent("");
                 setImages([]);
                 setPreviews([]);
-            } else {
-                setMessage(data.error || "Erreur lors de l'ajout.");
             }
         } catch (error) {
             setMessage("Une erreur est survenue.");

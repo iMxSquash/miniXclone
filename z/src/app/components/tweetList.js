@@ -1,22 +1,39 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import useSocket from "./useSocket";
 
 export default function TweetList() {
     const [tweets, setTweets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const socket = useSocket();
 
     useEffect(() => {
-        async function fetchTweets() {
-            const res = await fetch("/api/tweet");
-            const data = await res.json();
-            if (res.ok) {
-                setTweets(data.tweets);
-            }
-            setLoading(false);
-        }
+        // Charger les tweets existants
         fetchTweets();
-    }, []);
+
+        if (!socket) return;
+
+        // Exactement comme dans messages/page.js
+        const handleNewTweet = (tweet) => {
+            setTweets((prev) => [tweet, ...prev]);
+        };
+
+        socket.on("newTweet", handleNewTweet);
+
+        return () => {
+            socket.off("newTweet", handleNewTweet);
+        };
+    }, [socket]);
+
+    const fetchTweets = async () => {
+        const res = await fetch("/api/tweet");
+        const data = await res.json();
+        if (res.ok) {
+            setTweets(data.tweets);
+        }
+        setLoading(false);
+    };
 
     return (
         <div>

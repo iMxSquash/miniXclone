@@ -4,23 +4,23 @@ const { Server } = require("socket.io");
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
-        origin: "*",
-    },
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
 });
 
 io.on("connection", (socket) => {
-    console.log("Nouvelle connexion:", socket.id);
+    console.log("🟢 Nouvelle connexion:", socket.id);
 
-    socket.on("message", (msg) => {
-        console.log("Message reçu:", msg);
-        io.emit("message", msg); // Réémet à tous les clients
+    // Gestion des tweets
+    socket.on("newTweet", (tweet) => {
+        console.log("📝 Tweet reçu du client:", socket.id);
+        io.emit("newTweet", tweet);
     });
 
     socket.on("disconnect", () => {
-        console.log("Utilisateur déconnecté:", socket.id);
+        console.log("🔴 Client déconnecté:", socket.id);
     });
 });
 
-httpServer.listen(3001, () => {
-    console.log("Socket.IO Server lancé sur http://localhost:3001");
-});
+httpServer.listen(3001);
