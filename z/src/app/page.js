@@ -8,7 +8,7 @@ import AddTweet from "./components/addTweet";
 const Home = () => {
   return (
     <>
-      <div className="flex flex-col w-full h-[100dvh] overflow-y-auto">
+      <div className="flex flex-col w-full">
         <AddTweet />
         <TweetList />
       </div>

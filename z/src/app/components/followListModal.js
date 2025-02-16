@@ -13,7 +13,6 @@ const FollowListModal = ({ userId, type, onClose }) => {
         const fetchUsers = async () => {
             setLoading(true);
             try {
-                // First fetch to get IDs
                 const res = await fetch(`/api/user/${userId}/${type}`);
                 const data = await res.json();
 
@@ -25,12 +24,33 @@ const FollowListModal = ({ userId, type, onClose }) => {
                         userIds = data.following;
                     }
 
-                    // Second fetch to get details for each user
-                    const userDetailsPromises = userIds.map(id =>
-                        fetch(`/api/user/${id}`).then(res => res.json())
-                    );
+                    // Correction de la gestion des IDs
+                    const userDetailsPromises = userIds.map(async (id) => {
+                        // Extraire l'ID correctement selon le format
+                        const userId = id?._id || id?.toString() || id;
+
+                        if (!userId) {
+                            console.error("ID invalide:", id);
+                            return null;
+                        }
+
+                        try {
+                            const res = await fetch(`/api/user/${userId}`);
+                            if (!res.ok) {
+                                console.error(`Erreur pour l'utilisateur ${userId}:`, await res.text());
+                                return null;
+                            }
+                            const userData = await res.json();
+                            return userData;
+                        } catch (error) {
+                            console.error(`Erreur pour l'utilisateur ${userId}:`, error);
+                            return null;
+                        }
+                    });
+
                     const userDetails = await Promise.all(userDetailsPromises);
-                    setUsers(userDetails);
+                    console.log("Détails des utilisateurs:", userDetails);
+                    setUsers(userDetails.filter(user => user !== null));
                 } else {
                     console.error("Erreur API :", data);
                     setUsers([]);
@@ -45,8 +65,6 @@ const FollowListModal = ({ userId, type, onClose }) => {
 
         fetchUsers();
     }, [userId, type]);
-
-
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

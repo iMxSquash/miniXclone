@@ -2,12 +2,55 @@ import Image from "next/image";
 import { useUser } from "../context/UserContext";
 import { useRouter } from "next/navigation";
 
-export default function TweetDetail({ tweet }) {
+export default function TweetDetail({ tweet, setTweet }) {
     const { user } = useUser();
     const router = useRouter();
 
     const handleTweetClick = () => {
         router.push(`/tweet/${tweet._id}`);
+    };
+
+    const handleLike = async (e) => {
+        e.stopPropagation();
+        const res = await fetch(`/api/tweet/${tweet._id}/like`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user._id })
+        });
+        if (res.ok) {
+            setTweet(prev => ({
+                ...prev,
+                likes: prev.likes.includes(user._id)
+                    ? prev.likes.filter(id => id !== user._id)
+                    : [...prev.likes, user._id]
+            }));
+        }
+    };
+
+    const handleRetweet = async (e) => {
+        e.stopPropagation();
+        try {
+            const res = await fetch(`/api/tweet/${tweet._id}/replies`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user._id })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.error || "Une erreur s'est produite");
+                return;
+            }
+
+            setTweet(prev => ({
+                ...prev,
+                replies: data.tweet.replies
+            }));
+        } catch (error) {
+            console.error("Retweet error:", error);
+            alert("Une erreur s'est produite");
+        }
     };
 
     return (
@@ -44,8 +87,21 @@ export default function TweetDetail({ tweet }) {
                 {new Date(tweet.createdAt).toLocaleString()}
             </div>
             <div className="flex gap-4 mt-4 border-t border-border-dark pt-4">
-                <div>{tweet.likes?.length || 0} Likes</div>
-                <div>{tweet.comments?.length || 0} Comments</div>
+                <button
+                    onClick={handleLike}
+                    className={`flex items-center gap-2 ${tweet.likes?.includes(user._id) ? "text-red-500" : ""}`}
+                >
+                    ❤️ <span>{tweet.likes?.length || 0}</span>
+                </button>
+                <button
+                    onClick={handleRetweet}
+                    className={`flex items-center gap-2 ${tweet.replies?.includes(user._id) ? "text-green-500" : ""}`}
+                >
+                    🔄 <span>{tweet.replies?.length || 0}</span>
+                </button>
+                <div className="flex items-center gap-2">
+                    💬 <span>{tweet.comments?.length || 0}</span>
+                </div>
             </div>
         </div>
     );

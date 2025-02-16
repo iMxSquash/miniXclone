@@ -21,7 +21,9 @@ export default function RootLayout({ children }) {
         <body>
           <main className="flex max-w-4xl mx-auto border-r border-border-dark">
             <Navbar />
-            {children}
+            <main className="w-full h-[100dvh] overflow-y-auto">
+              {children}
+            </main>
           </main>
         </body>
       </html>

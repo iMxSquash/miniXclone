@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useUser } from "@/app/context/UserContext";
 import UploadAvatar from "./container/uploadAvatar";
 import UploadBanner from "./container/uploadBanner";
