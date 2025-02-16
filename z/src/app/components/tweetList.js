@@ -3,11 +3,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import useSocket from "./useSocket";
 import Loading from "../loading";
+import { useUser } from "../context/UserContext";
 
 export default function TweetList() {
     const [tweets, setTweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const socket = useSocket();
+
+    const { user } = useUser();
 
     const fetchTweets = async () => {
         const res = await fetch("/api/tweet");
@@ -34,6 +37,73 @@ export default function TweetList() {
         };
     }, [socket]);
 
+    const handleLike = async (tweetId) => {
+        const res = await fetch(`/api/tweet/${tweetId}/like`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user._id }) // Remplacez par l'ID de l'utilisateur actuel
+        });
+        if (res.ok) {
+            setTweets(tweets.map(tweet => {
+                if (tweet._id === tweetId) {
+                    const hasLiked = tweet.likes.includes(user._id);
+                    return {
+                        ...tweet,
+                        likes: hasLiked
+                            ? tweet.likes.filter(id => id !== user._id)
+                            : [...tweet.likes, user._id]
+                    };
+                }
+                return tweet;
+            }));
+        }
+    };
+
+    const handleRetweet = async (tweetId) => {
+        const res = await fetch(`/api/tweet/${tweetId}/retweet`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user._id })
+        });
+        if (res.ok) {
+            setTweets(tweets.map(tweet => {
+                if (tweet._id === tweetId) {
+                    const hasRetweeted = tweet.retweets.includes(user._id);
+                    return {
+                        ...tweet,
+                        retweets: hasRetweeted
+                            ? tweet.retweets.filter(id => id !== user._id)
+                            : [...tweet.retweets, user._id]
+                    };
+                }
+                return tweet;
+            }));
+        }
+    };
+
+    const handleReply = async (tweetId, content) => {
+        const res = await fetch(`/api/tweet/${tweetId}/reply`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: user._id,
+                content
+            })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            setTweets(tweets.map(tweet => {
+                if (tweet._id === tweetId) {
+                    return {
+                        ...tweet,
+                        replies: [...tweet.replies, data.reply._id]
+                    };
+                }
+                return tweet;
+            }));
+        }
+    };
+
     return (
         <div>
             {loading ? (
@@ -59,9 +129,20 @@ export default function TweetList() {
                                 </div>
                             )}
                             <div className="mt-2 flex gap-4">
-                                <button>❤️ {tweet.likes?.length || 0}</button>
-                                <button>🔄 {tweet.retweets?.length || 0}</button>
-                                <button>💬 {tweet.replies?.length || 0}</button>
+                                <button onClick={() => handleLike(tweet._id)}
+                                    className={tweet.likes?.includes(user._id) ? "text-red-500" : ""}>
+                                    ❤️ {tweet.likes?.length || 0}
+                                </button>
+                                <button onClick={() => handleRetweet(tweet._id)}
+                                    className={tweet.retweets?.includes(user._id) ? "text-green-500" : ""}>
+                                    🔄 {tweet.retweets?.length || 0}
+                                </button>
+                                <button onClick={() => {
+                                    const content = prompt('Enter your reply:');
+                                    if (content) handleReply(tweet._id, content);
+                                }}>
+                                    💬 {tweet.replies?.length || 0}
+                                </button>
                             </div>
                         </div>
                     </div>
