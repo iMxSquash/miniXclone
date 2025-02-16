@@ -10,6 +10,7 @@ import Image from "next/image";
 import withAuth from "./withAuth";
 import FollowButton from "./followBtn";
 import FollowListModal from "./followListModal";
+import PostUser from "./postUser";
 
 const ProfilUser = ({ userGeted }) => {
     const { user } = useUser();
@@ -48,8 +49,8 @@ const ProfilUser = ({ userGeted }) => {
     if (!user || !userGeted?.user) return null;
 
     return user._id === userGeted.user._id ? (
-        <div className="flex flex-col gap-2 px-4">
-            <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
+            <div className="flex flex-col px-4">
                 <div className="font-bold text-2xl">
                     {user.name}
                 </div>
@@ -59,7 +60,7 @@ const ProfilUser = ({ userGeted }) => {
             </div>
             <UploadBanner />
             <UploadAvatar />
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 px-4">
                 <div className="flex justify-end">
                     <button className="text-secondary-light border border-secondary rounded-full px-4 py-2 font-bold"
                         onClick={() => openEditProfile()}>
@@ -92,7 +93,7 @@ const ProfilUser = ({ userGeted }) => {
             </div>
             {
                 isEditProfileOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-4">
                         <div className="bg-background text-secondary-light p-6 rounded-lg w-96">
                             <h2 className="font-black text-2xl mb-4">Modifier le profil</h2>
                             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -160,6 +161,7 @@ const ProfilUser = ({ userGeted }) => {
                     />
                 )
             }
+            <PostUser userId={user._id} />
         </div >
     ) : (
         <div className="flex flex-col gap-2 px-4">
@@ -224,6 +226,7 @@ const ProfilUser = ({ userGeted }) => {
                     />
                 )
             }
+            <PostUser userId={userGeted.user._id} />
         </div>
     );
 };

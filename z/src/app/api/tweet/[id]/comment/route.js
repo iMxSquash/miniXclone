@@ -9,22 +9,28 @@ export async function POST(req, { params }) {
         const { userId, content } = await req.json();
 
         if (!content) {
-            return NextResponse.json({ error: "Content is required" }, { status: 400 });
+            return NextResponse.json({ error: "Le contenu est requis" }, { status: 400 });
         }
 
         const parentTweet = await Tweet.findById(id);
         if (!parentTweet) {
-            return NextResponse.json({ error: "Tweet not found" }, { status: 404 });
+            return NextResponse.json({ error: "Tweet non trouvé" }, { status: 404 });
         }
 
-        const reply = await Tweet.create({
+        const comment = await Tweet.create({
             author: userId,
             content,
+            replyTo: id
         });
 
-        await Tweet.findByIdAndUpdate(id, { $push: { replies: reply._id } });
+        await Tweet.findByIdAndUpdate(id, { $push: { comments: comment._id } });
 
-        return NextResponse.json({ success: true, reply }, { status: 201 });
+        const populatedComment = await comment.populate('author');
+
+        return NextResponse.json({
+            success: true,
+            comment: populatedComment
+        }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

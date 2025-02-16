@@ -5,7 +5,7 @@ import Tweet from "../../../../../../models/tweet.model";
 export async function PUT(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         const { userId } = await req.json();
 
         const tweet = await Tweet.findById(id);
