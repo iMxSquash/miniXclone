@@ -188,7 +188,6 @@ export default function AddTweet() {
 
     return (
         <div className="w-full p-6 border-b border-border-dark">
-            <h2 className="text-xl font-bold mb-4">Ajouter un tweet</h2>
             {message && <p className="text-error">{message}</p>}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
                 <div className="flex items-start gap-4 w-full">

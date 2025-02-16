@@ -2,19 +2,27 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import useSocket from "./useSocket";
+import Loading from "../loading";
 
 export default function TweetList() {
     const [tweets, setTweets] = useState([]);
     const [loading, setLoading] = useState(true);
     const socket = useSocket();
 
+    const fetchTweets = async () => {
+        const res = await fetch("/api/tweet");
+        const data = await res.json();
+        if (res.ok) {
+            setTweets(data.tweets);
+        }
+        setLoading(false);
+    };
+
     useEffect(() => {
-        // Charger les tweets existants
         fetchTweets();
 
         if (!socket) return;
 
-        // Exactement comme dans messages/page.js
         const handleNewTweet = (tweet) => {
             setTweets((prev) => [tweet, ...prev]);
         };
@@ -26,38 +34,35 @@ export default function TweetList() {
         };
     }, [socket]);
 
-    const fetchTweets = async () => {
-        const res = await fetch("/api/tweet");
-        const data = await res.json();
-        if (res.ok) {
-            setTweets(data.tweets);
-        }
-        setLoading(false);
-    };
-
     return (
         <div>
             {loading ? (
-                <p>Chargement...</p>
+                <Loading />
             ) : (
                 tweets.map((tweet) => (
-                    <div key={tweet._id} className="border p-4 my-2">
-                        <div className="flex items-center">
-                            <Image src={tweet.author.avatar} width={40} height={40} alt={tweet.author.name} className="rounded-full" />
-                            <span className="ml-2 font-bold">{tweet.author.name}</span>
+                    <div key={tweet._id} className="flex justify-between w-full border-b border-border-dark p-4">
+                        <div className="h-full w-[20%]">
+                            <img src={tweet.author.avatar} alt={tweet.author.name} className="rounded-full w-12 h-12" />
                         </div>
-                        <p className="mt-2">{tweet.content}</p>
-                        {tweet.mediaFiles.length && tweet.mediaFiles.length > 0 && (
-                            <div className="mt-2">
-                                {tweet.mediaFiles.map((url, index) => (
-                                    <Image key={index} src={url} width={200} height={200} alt="tweet media" className="w-full rounded-lg" />
-                                ))}
+                        <div className="flex flex-col gap-2 w-[75%]">
+                            <div className="flex gap-4 align-top">
+                                <div className="flex flex-col">
+                                    <span className="font-bold">{tweet.author.name}</span>
+                                    <p className="">{tweet.content}</p>
+                                </div>
                             </div>
-                        )}
-                        <div className="mt-2 flex gap-4">
-                            <button>❤️ {tweet.likes?.length || 0}</button>
-                            <button>🔄 {tweet.retweets?.length || 0}</button>
-                            <button>💬 {tweet.replies?.length || 0}</button>
+                            {tweet.mediaFiles.length > 0 && (
+                                <div className="mt-2">
+                                    {tweet.mediaFiles.map((url, index) => (
+                                        <Image key={index} src={url} width={200} height={200} alt="tweet media" className="w-full rounded-lg" />
+                                    ))}
+                                </div>
+                            )}
+                            <div className="mt-2 flex gap-4">
+                                <button>❤️ {tweet.likes?.length || 0}</button>
+                                <button>🔄 {tweet.retweets?.length || 0}</button>
+                                <button>💬 {tweet.replies?.length || 0}</button>
+                            </div>
                         </div>
                     </div>
                 ))
