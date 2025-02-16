@@ -43,7 +43,7 @@ export default function TweetList() {
                 tweets.map((tweet) => (
                     <div key={tweet._id} className="border p-4 my-2">
                         <div className="flex items-center">
-                            <Image src={tweet.author.avatar} width={20} height={20} alt={tweet.author.name} className="rounded-full" />
+                            <Image src={tweet.author.avatar} width={40} height={40} alt={tweet.author.name} className="rounded-full" />
                             <span className="ml-2 font-bold">{tweet.author.name}</span>
                         </div>
                         <p className="mt-2">{tweet.content}</p>

@@ -2,7 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "../context/UserContext";
 import useSocket from "./useSocket";
-import { ArrowLeft, ArrowRight, Image, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ImageIcon, X } from "lucide-react";
+import Image from "next/image";
 
 export default function AddTweet() {
     const { user } = useUser();
@@ -189,23 +190,26 @@ export default function AddTweet() {
         <div className="w-full p-6 border-b border-border-dark">
             <h2 className="text-xl font-bold mb-4">Ajouter un tweet</h2>
             {message && <p className="text-error">{message}</p>}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="relative">
-                    <textarea
-                        ref={textareaRef}
-                        placeholder="What is happening?!"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        className="w-full p-2 pb-6 bg-transparent resize-none outline-none placeholder:text-secondary text-secondary-light"
-                    />
-                    <div className="absolute bottom-2 right-2 text-sm text-secondary">
-                        {content.length}/280
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+                <div className="flex items-start gap-4 w-full">
+                    <Image src={user.avatar} width={40} height={40} alt={user.name} className="rounded-full" />
+                    <div className="relative w-full">
+                        <textarea
+                            ref={textareaRef}
+                            placeholder="What is happening?!"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            className="w-full p-2 pb-6 bg-transparent resize-none outline-none placeholder:text-secondary text-secondary-light"
+                        />
+                        <div className="absolute bottom-2 right-2 text-sm text-secondary">
+                            {content.length}/280
+                        </div>
                     </div>
                 </div>
                 {renderImages()}
-                <div className="flex justify-between items-center p-2">
+                <div className="flex justify-between items-center py-2 border-t border-border-dark ms-12">
                     <label className="cursor-pointer text-primary">
-                        <Image />
+                        <ImageIcon />
                         <input
                             type="file"
                             accept="image/*"
