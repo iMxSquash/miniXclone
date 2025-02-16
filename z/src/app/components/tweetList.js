@@ -48,7 +48,7 @@ export default function TweetList() {
                             <div className="flex gap-4 align-top">
                                 <div className="flex flex-col">
                                     <span className="font-bold">{tweet.author.name}</span>
-                                    <p className="">{tweet.content}</p>
+                                    <p className="text-wrap">{tweet.content}</p>
                                 </div>
                             </div>
                             {tweet.mediaFiles.length > 0 && (

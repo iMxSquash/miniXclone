@@ -197,7 +197,12 @@ export default function AddTweet() {
                             ref={textareaRef}
                             placeholder="What is happening?!"
                             value={content}
-                            onChange={(e) => setContent(e.target.value)}
+                            onChange={(e) => {
+                                if (e.target.value.length <= 280) {
+                                    setContent(e.target.value);
+                                }
+                            }}
+                            maxLength={280}
                             className="w-full p-2 pb-6 bg-transparent resize-none outline-none placeholder:text-secondary text-secondary-light"
                         />
                         <div className="absolute bottom-2 right-2 text-sm text-secondary">
