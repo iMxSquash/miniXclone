@@ -81,6 +81,11 @@ export default function CommentList({ comments }) {
         }
     };
 
+    const handleAvatarClick = (e, authorId) => {
+        e.stopPropagation();
+        router.push(`/user/${authorId}`);
+    };
+
     if (loading) return <Loading />;
 
     if (!comments?.length) {
@@ -106,7 +111,8 @@ export default function CommentList({ comments }) {
                         <img
                             src={comment.author.avatar}
                             alt={comment.author.name}
-                            className="rounded-full w-10 h-10"
+                            className="rounded-full w-10 h-10 cursor-pointer hover:opacity-80"
+                            onClick={(e) => handleAvatarClick(e, comment.author._id)}
                         />
                     </div>
                     <div className="flex flex-col gap-1 w-[85%]">

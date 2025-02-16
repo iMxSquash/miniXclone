@@ -123,6 +123,11 @@ export default function TweetList() {
         router.push(`/tweet/${tweetId}`);
     };
 
+    const handleAvatarClick = (e, authorId) => {
+        e.stopPropagation();
+        router.push(`/user/${authorId}`);
+    };
+
     return (
         <div>
             {loading ? (
@@ -135,7 +140,12 @@ export default function TweetList() {
                         onClick={(e) => handleTweetClick(e, tweet._id)}
                     >
                         <div className="h-full w-[20%]">
-                            <img src={tweet.author.avatar} alt={tweet.author.name} className="rounded-full w-12 h-12" />
+                            <img
+                                src={tweet.author.avatar}
+                                alt={tweet.author.name}
+                                className="rounded-full w-12 h-12 cursor-pointer hover:opacity-80"
+                                onClick={(e) => handleAvatarClick(e, tweet.author._id)}
+                            />
                         </div>
                         <div className="flex flex-col gap-2 w-[75%]">
                             <div className="flex gap-4 align-top">

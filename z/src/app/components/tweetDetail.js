@@ -53,6 +53,11 @@ export default function TweetDetail({ tweet, setTweet }) {
         }
     };
 
+    const handleAvatarClick = (e) => {
+        e.stopPropagation();
+        router.push(`/user/${tweet.author._id}`);
+    };
+
     return (
         <div
             onClick={handleTweetClick}
@@ -62,7 +67,8 @@ export default function TweetDetail({ tweet, setTweet }) {
                 <img
                     src={tweet.author.avatar}
                     alt={tweet.author.name}
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 rounded-full cursor-pointer hover:opacity-80"
+                    onClick={handleAvatarClick}
                 />
                 <div className="flex flex-col">
                     <span className="font-bold">{tweet.author.name}</span>
