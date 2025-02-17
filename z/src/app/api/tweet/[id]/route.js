@@ -38,3 +38,22 @@ export async function GET(req, { params }) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+export async function DELETE(req, { params }) {
+    try {
+        await connect();
+        const { id } = params;
+        
+        const tweet = await Tweet.findById(id);
+        if (!tweet) {
+            return NextResponse.json({ error: "Tweet not found" }, { status: 404 });
+        }
+
+        await Tweet.findByIdAndDelete(id);
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error("Error deleting tweet:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

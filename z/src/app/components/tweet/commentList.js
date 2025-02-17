@@ -28,13 +28,18 @@ export default function CommentList({ comments }) {
                     const res = await fetch(`/api/tweet/${comment._id}`);
                     if (res.ok) {
                         const data = await res.json();
-                        setLoadedComments(prev => [data.tweet, ...prev]);
                     }
                 } catch (error) {
                     console.error("Error fetching new comment:", error);
                 }
             });
         }
+
+        return () => {
+            if (socket) {
+                socket.off('newComment');
+            }
+        };
     }, [socket]);
 
     useEffect(() => {
@@ -47,7 +52,6 @@ export default function CommentList({ comments }) {
 
                 const commentsData = await Promise.all(
                     comments.map(async (comment) => {
-                        // Gérer les différents formats possibles d'ID
                         const commentId = typeof comment === 'object' ?
                             (comment._id || comment.toString()) :
                             comment;
@@ -67,9 +71,12 @@ export default function CommentList({ comments }) {
                     })
                 );
 
-                const validComments = commentsData.filter(comment => comment !== null);
-                console.log("Commentaires chargés:", validComments);
-                setLoadedComments(validComments);
+                // Filtrer les doublons par _id
+                const uniqueComments = commentsData.filter((comment, index, self) =>
+                    comment && index === self.findIndex(c => c && c._id === comment._id)
+                );
+
+                setLoadedComments(uniqueComments);
             } catch (error) {
                 console.error("Error fetching comments:", error);
             } finally {
@@ -103,6 +110,26 @@ export default function CommentList({ comments }) {
                 }
                 return comment;
             }));
+        }
+    };
+
+    const handleDelete = async (e, commentId) => {
+        e.stopPropagation();
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) return;
+
+        try {
+            const res = await fetch(`/api/tweet/${commentId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                setLoadedComments(loadedComments.filter(comment => comment._id !== commentId));
+            } else {
+                alert('Erreur lors de la suppression du commentaire');
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            alert('Erreur lors de la suppression du commentaire');
         }
     };
 
@@ -172,6 +199,14 @@ export default function CommentList({ comments }) {
                             >
                                 ❤️ {comment.likes?.length || 0}
                             </button>
+                            {user._id === comment.author._id && (
+                                <button
+                                    onClick={(e) => handleDelete(e, comment._id)}
+                                    className="text-red-500 hover:text-red-700"
+                                >
+                                    🗑️
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

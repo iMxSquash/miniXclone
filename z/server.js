@@ -30,6 +30,12 @@ io.on("connection", (socket) => {
         io.emit("newComment", comment);
     });
 
+    // Ajouter la gestion des likes
+    socket.on("like", (data) => {
+        console.log("❤️ Like reçu:", data);
+        io.emit("likeUpdate", data);
+    });
+
     socket.on("disconnect", () => {
         console.log("🔴 Client déconnecté:", socket.id);
     });

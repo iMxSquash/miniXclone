@@ -93,6 +93,27 @@ export default function PostUser({ userId }) {
         }
     };
 
+    const handleDelete = async (e, tweetId) => {
+        e.stopPropagation();
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce post ?')) return;
+
+        try {
+            const res = await fetch(`/api/tweet/${tweetId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                setPosts(posts.filter(post => post._id !== tweetId));
+                setReplies(replies.filter(reply => reply._id !== tweetId));
+            } else {
+                alert('Erreur lors de la suppression du post');
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            alert('Erreur lors de la suppression du post');
+        }
+    };
+
     const handleTweetClick = (e, tweetId) => {
         if (e.target.tagName.toLowerCase() === 'button') {
             return;
@@ -134,6 +155,14 @@ export default function PostUser({ userId }) {
                     }}>
                         💬 {tweet.replies?.length || 0}
                     </button>
+                    {user._id === tweet.author._id && (
+                        <button
+                            onClick={(e) => handleDelete(e, tweet._id)}
+                            className="text-red-500 hover:text-red-700"
+                        >
+                            🗑️
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,10 +1,32 @@
 import Image from "next/image";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import useSocket from "../hook/useSocket";
 
 export default function TweetDetail({ tweet, setTweet }) {
     const { user } = useUser();
     const router = useRouter();
+    const socket = useSocket();
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleLikeUpdate = (data) => {
+            if (data.tweetId === tweet._id) {
+                setTweet(prev => ({
+                    ...prev,
+                    likes: data.likes
+                }));
+            }
+        };
+
+        socket.on("likeUpdate", handleLikeUpdate);
+
+        return () => {
+            socket.off("likeUpdate", handleLikeUpdate);
+        };
+    }, [socket, tweet._id]);
 
     const handleTweetClick = () => {
         router.push(`/tweet/${tweet._id}`);
@@ -18,11 +40,19 @@ export default function TweetDetail({ tweet, setTweet }) {
             body: JSON.stringify({ userId: user._id })
         });
         if (res.ok) {
+            const newLikes = tweet.likes.includes(user._id)
+                ? tweet.likes.filter(id => id !== user._id)
+                : [...tweet.likes, user._id];
+            
+            // Émettre l'événement socket pour le like
+            socket.emit("like", {
+                tweetId: tweet._id,
+                likes: newLikes
+            });
+
             setTweet(prev => ({
                 ...prev,
-                likes: prev.likes.includes(user._id)
-                    ? prev.likes.filter(id => id !== user._id)
-                    : [...prev.likes, user._id]
+                likes: newLikes
             }));
         }
     };
@@ -50,6 +80,26 @@ export default function TweetDetail({ tweet, setTweet }) {
         } catch (error) {
             console.error("Retweet error:", error);
             alert("Une erreur s'est produite");
+        }
+    };
+
+    const handleDelete = async (e) => {
+        e.stopPropagation();
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce tweet ?')) return;
+
+        try {
+            const res = await fetch(`/api/tweet/${tweet._id}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                router.push('/'); // Redirection vers la page d'accueil après suppression
+            } else {
+                alert('Erreur lors de la suppression du tweet');
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            alert('Erreur lors de la suppression du tweet');
         }
     };
 
@@ -132,6 +182,14 @@ export default function TweetDetail({ tweet, setTweet }) {
                 <div className="flex items-center gap-2">
                     💬 <span>{tweet.comments?.length || 0}</span>
                 </div>
+                {user._id === tweet.author._id && (
+                    <button
+                        onClick={handleDelete}
+                        className="text-red-500 hover:text-red-700 flex items-center gap-2"
+                    >
+                        🗑️ <span>Supprimer</span>
+                    </button>
+                )}
             </div>
         </div>
     );

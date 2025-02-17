@@ -31,10 +31,24 @@ export default function TweetList() {
             setTweets((prev) => [tweet, ...prev]);
         };
 
+        const handleLikeUpdate = (data) => {
+            setTweets(prev => prev.map(tweet => {
+                if (tweet._id === data.tweetId) {
+                    return {
+                        ...tweet,
+                        likes: data.likes
+                    };
+                }
+                return tweet;
+            }));
+        };
+
         socket.on("newTweet", handleNewTweet);
+        socket.on("likeUpdate", handleLikeUpdate);
 
         return () => {
             socket.off("newTweet", handleNewTweet);
+            socket.off("likeUpdate", handleLikeUpdate);
         };
     }, [socket]);
 
@@ -45,14 +59,23 @@ export default function TweetList() {
             body: JSON.stringify({ userId: user._id }) // Remplacez par l'ID de l'utilisateur actuel
         });
         if (res.ok) {
+            const updatedTweet = tweets.find(t => t._id === tweetId);
+            const hasLiked = updatedTweet.likes.includes(user._id);
+            const newLikes = hasLiked
+                ? updatedTweet.likes.filter(id => id !== user._id)
+                : [...updatedTweet.likes, user._id];
+            
+            // Émettre l'événement socket pour le like
+            socket.emit("like", {
+                tweetId,
+                likes: newLikes
+            });
+
             setTweets(tweets.map(tweet => {
                 if (tweet._id === tweetId) {
-                    const hasLiked = tweet.likes.includes(user._id);
                     return {
                         ...tweet,
-                        likes: hasLiked
-                            ? tweet.likes.filter(id => id !== user._id)
-                            : [...tweet.likes, user._id]
+                        likes: newLikes
                     };
                 }
                 return tweet;
@@ -128,6 +151,26 @@ export default function TweetList() {
         router.push(`/user/${authorId}`);
     };
 
+    const handleDelete = async (e, tweetId) => {
+        e.stopPropagation();
+        if (!confirm('Êtes-vous sûr de vouloir supprimer ce tweet ?')) return;
+
+        try {
+            const res = await fetch(`/api/tweet/${tweetId}`, {
+                method: 'DELETE'
+            });
+
+            if (res.ok) {
+                setTweets(tweets.filter(tweet => tweet._id !== tweetId));
+            } else {
+                alert('Erreur lors de la suppression du tweet');
+            }
+        } catch (error) {
+            console.error("Delete error:", error);
+            alert('Erreur lors de la suppression du tweet');
+        }
+    };
+
     return (
         <div>
             {loading ? (
@@ -182,6 +225,14 @@ export default function TweetList() {
                                 }}>
                                     💬 {tweet.comments?.length || 0}
                                 </button>
+                                {user._id === tweet.author._id && (
+                                    <button 
+                                        onClick={(e) => handleDelete(e, tweet._id)}
+                                        className="text-red-500 hover:text-red-700"
+                                    >
+                                        🗑️
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
