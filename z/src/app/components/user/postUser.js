@@ -149,6 +149,13 @@ export default function PostUser({ userId }) {
                         className={tweet.likes?.includes(user._id) ? "text-red-500" : ""}>
                         ❤️ {tweet.likes?.length || 0}
                     </button>
+                    <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRetweet(tweet._id);
+                                }}
+                                    className={tweet.replies?.includes(user._id) ? "text-green-500" : ""}>
+                                    🔄 {tweet.replies?.length || 0}
+                                </button>
                     <button onClick={() => {
                         const content = prompt('Enter your reply:');
                         if (content) handleReply(tweet._id, content);
