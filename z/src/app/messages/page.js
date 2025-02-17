@@ -1,59 +1,61 @@
 "use client";
 
-import Link from "next/link";
-import { URL } from '../utils/constant/utls';
-import withAuth from "../components/withAuth";
-import useSocket from "../components/useSocket";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
+import ConversationList from "../components/messages/conversationList";
+import SearchBar from "../components/messages/searchBar";
+import NewConversationModal from "../components/messages/newConversationModal";
+import withAuth from "../components/hook/withAuth";
 
 const Messages = () => {
+  const [conversations, setConversations] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useUser();
 
-  const socket = useSocket();
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-
   useEffect(() => {
-    if (!socket) return;
+    fetchConversations();
+  }, [user._id]);
 
-    const handleMessage = (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-
-    socket.on("message", handleMessage);
-
-    // Nettoyage lors du démontage du composant
-    return () => {
-      socket.off("message", handleMessage);
-    };
-  }, [socket]);
-
-  const sendMessage = () => {
-    if (socket && message) {
-      socket.emit("message", message);
-      setMessage("");
+  const fetchConversations = async () => {
+    const res = await fetch(`/api/conversation?userId=${user._id}`);
+    if (res.ok) {
+      const data = await res.json();
+      setConversations(data);
     }
   };
 
+  const filteredConversations = conversations.filter(conv =>
+    conv.participants.some(p =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
   return (
-    <div className="p-4">
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{user.name} - {msg}</li>
-        ))}
-      </ul>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        className="border p-2"
-      />
-      <button onClick={sendMessage} className="ml-2 p-2 bg-blue-500 text-white">
-        Envoyer
-      </button>
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-border-dark">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold">Messages</h1>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary text-background px-4 py-2 rounded-full"
+          >
+            Nouveau message
+          </button>
+        </div>
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+      </div>
+
+      <ConversationList conversations={filteredConversations} />
+
+      {isModalOpen && (
+        <NewConversationModal
+          onClose={() => setIsModalOpen(false)}
+          onConversationCreated={fetchConversations}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default withAuth(Messages);

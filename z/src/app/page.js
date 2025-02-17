@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import withAuth from "./components/withAuth";
-import TweetList from "./components/tweetList";
-import AddTweet from "./components/addTweet";
+import withAuth from "./components/hook/withAuth";
+import TweetList from "./components/tweet/tweetList";
+import AddTweet from "./components/tweet/addTweet";
 
 const Home = () => {
   return (

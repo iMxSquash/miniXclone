@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Loading from "../loading";
-import { useUser } from "../context/UserContext";
+import Loading from "@/app/loading";
+import { useUser } from "@/app/context/UserContext";
 
 export default function CommentList({ comments }) {
     const [loadedComments, setLoadedComments] = useState([]);

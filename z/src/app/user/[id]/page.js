@@ -1,4 +1,4 @@
-import ProfilUser from "@/app/components/profilUser";
+import ProfilUser from "@/app/components/user/profilUser";
 import { URL } from "../../utils/constant/utls";
 
 const getUser = async (id) => {

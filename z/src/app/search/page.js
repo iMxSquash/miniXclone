@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import withAuth from "../components/withAuth";
-import SearchBar from "../components/searchBar";
-import SearchResponse from "../components/searchResponse";
+import withAuth from "../components/hook/withAuth";
+import SearchBar from "../components/container/searchBar";
+import SearchResponse from "../components/tweet/searchResponse";
 import Loading from "../loading";
 
 const Search = () => {

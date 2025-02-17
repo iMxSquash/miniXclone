@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useUser } from "../context/UserContext";
-import useSocket from "./useSocket";
+import { useUser } from "../../context/UserContext";
+import useSocket from "../hook/useSocket";
 import { ArrowLeft, ArrowRight, ImageIcon, X } from "lucide-react";
 import Image from "next/image";
 

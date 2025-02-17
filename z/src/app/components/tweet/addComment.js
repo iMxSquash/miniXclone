@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../../context/UserContext";
 import Image from "next/image";
 import { ImageIcon, XCircle } from "lucide-react";
 

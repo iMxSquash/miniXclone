@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import useSocket from "./useSocket";
-import Loading from "../loading";
-import { useUser } from "../context/UserContext";
-import { useRouter } from "next/navigation"; // Changer l'import ici
+import useSocket from "../hook/useSocket";
+import Loading from "../../loading";
+import { useUser } from "../../context/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function TweetList() {
     const [tweets, setTweets] = useState([]);

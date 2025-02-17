@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../../context/UserContext";
 import Image from "next/image";
-import Loading from "../loading";
+import Loading from "../../loading";
 import { useRouter } from "next/navigation";
 
 export default function PostUser({ userId }) {

@@ -1,12 +1,12 @@
 "use client";
 
 import { useUser } from "@/app/context/UserContext";
-import UploadAvatar from "./container/uploadAvatar";
-import UploadBanner from "./container/uploadBanner";
+import UploadAvatar from "../container/uploadAvatar";
+import UploadBanner from "../container/uploadBanner";
 import { useState } from "react";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
-import withAuth from "./withAuth";
+import withAuth from "../hook/withAuth";
 import FollowButton from "./followBtn";
 import FollowListModal from "./followListModal";
 import PostUser from "./postUser";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useUser } from "../context/UserContext";
+import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
 
 export default function TweetDetail({ tweet, setTweet }) {
