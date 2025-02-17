@@ -6,6 +6,7 @@ import ConversationList from "../components/messages/conversationList";
 import SearchBar from "../components/messages/searchBar";
 import NewConversationModal from "../components/messages/newConversationModal";
 import withAuth from "../components/hook/withAuth";
+import { CirclePlus } from "lucide-react";
 
 const Messages = () => {
   const [conversations, setConversations] = useState([]);
@@ -36,12 +37,7 @@ const Messages = () => {
       <div className="p-4 border-b border-border-dark">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-bold">Messages</h1>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-background px-4 py-2 rounded-full"
-          >
-            Nouveau message
-          </button>
+          <CirclePlus size={40} className="p-2 rounded-full cursor-pointer hover:bg-secondary/20" onClick={() => setIsModalOpen(true)} />
         </div>
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
       </div>

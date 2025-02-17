@@ -7,7 +7,7 @@ import User from "../../../../../../models/user.model";
 export async function PUT(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         const { userId } = await req.json();
 
         const tweet = await Tweet.findById(id);
@@ -50,7 +50,7 @@ export async function PUT(req, { params }) {
 export async function POST(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         const { userId, content, mediaFiles } = await req.json();
 
         if (!content) {
@@ -87,7 +87,7 @@ export async function POST(req, { params }) {
 export async function DELETE(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         const { userId, commentId } = await req.json();
 
         const tweet = await Tweet.findById(id);

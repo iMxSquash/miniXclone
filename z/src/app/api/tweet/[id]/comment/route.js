@@ -5,7 +5,7 @@ import Tweet from "../../../../../../models/tweet.model";
 export async function POST(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         const { userId, content } = await req.json();
 
         if (!content) {

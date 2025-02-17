@@ -37,8 +37,8 @@ export default function MessageList({ messages, currentUser }) {
                         >
                             <div
                                 className={`max-w-[70%] ${isOwnMessage
-                                        ? 'bg-primary text-white rounded-l-lg rounded-tr-lg'
-                                        : 'bg-gray-100 rounded-r-lg rounded-tl-lg'
+                                        ? 'bg-primary text-secondary-light rounded-l-lg rounded-tr-lg'
+                                        : 'bg-secondary-light text-secondary-dark rounded-r-lg rounded-tl-lg'
                                     } p-3`}
                             >
                                 {!isOwnMessage && (

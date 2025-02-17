@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
-import MessageList from "../../components/messages/MessageList";
+import MessageList from "../../components/messages/messageList";
 import SendMessage from "../../components/messages/SendMessage";
 import useSocket from "../../components/hook/useSocket";
 import { useParams } from "next/navigation";
@@ -43,12 +43,20 @@ const ConversationPage = () => {
     return (
         <div className="flex flex-col h-full">
             <div className="p-4 border-b border-border-dark">
-                <h2 className="text-xl font-bold">
-                    {conversation.participants
-                        .filter(p => p._id !== user._id)
-                        .map(p => p.name)
-                        .join(", ")}
-                </h2>
+                <div className="flex items-center gap-3">
+                    <img
+                        src={conversation.participants
+                            .filter(p => p._id !== user._id)[0]?.avatar || '/default-avatar.png'}
+                        alt="Avatar"
+                        className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <h2 className="text-xl font-bold">
+                        {conversation.participants
+                            .filter(p => p._id !== user._id)
+                            .map(p => p.name)
+                            .join(", ")}
+                    </h2>
+                </div>
             </div>
 
             <MessageList messages={messages} currentUser={user} />
