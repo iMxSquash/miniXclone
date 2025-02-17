@@ -5,6 +5,8 @@ import useSocket from "../hook/useSocket";
 import Loading from "../../loading";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
+import Modal from "../container/modal";
+import { useToast } from "../../context/ToastContext";
 
 export default function TweetList() {
     const [tweets, setTweets] = useState([]);
@@ -12,6 +14,9 @@ export default function TweetList() {
     const socket = useSocket();
     const router = useRouter();
     const { user } = useUser();
+    const { showToast } = useToast();
+    const [modalOpen, setModalOpen] = useState(false);
+    const [tweetToDelete, setTweetToDelete] = useState(null);
 
     const fetchTweets = async () => {
         const res = await fetch("/api/tweet");
@@ -153,22 +158,30 @@ export default function TweetList() {
 
     const handleDelete = async (e, tweetId) => {
         e.stopPropagation();
-        if (!confirm('Êtes-vous sûr de vouloir supprimer ce tweet ?')) return;
+        setTweetToDelete(tweetId);
+        setModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!tweetToDelete) return;
 
         try {
-            const res = await fetch(`/api/tweet/${tweetId}`, {
+            const res = await fetch(`/api/tweet/${tweetToDelete}`, {
                 method: 'DELETE'
             });
 
             if (res.ok) {
-                setTweets(tweets.filter(tweet => tweet._id !== tweetId));
+                setTweets(tweets.filter(tweet => tweet._id !== tweetToDelete));
+                showToast('Tweet supprimé avec succès', 'success');
             } else {
-                alert('Erreur lors de la suppression du tweet');
+                showToast('Erreur lors de la suppression du tweet', 'error');
             }
         } catch (error) {
             console.error("Delete error:", error);
-            alert('Erreur lors de la suppression du tweet');
+            showToast('Erreur lors de la suppression du tweet', 'error');
         }
+        setModalOpen(false);
+        setTweetToDelete(null);
     };
 
     return (
@@ -238,6 +251,16 @@ export default function TweetList() {
                     </div>
                 ))
             )}
+            <Modal
+                isOpen={modalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                    setTweetToDelete(null);
+                }}
+                onConfirm={confirmDelete}
+                title="Supprimer le tweet"
+                message="Êtes-vous sûr de vouloir supprimer ce tweet ? Cette action est irréversible."
+            />
         </div>
     );
 }

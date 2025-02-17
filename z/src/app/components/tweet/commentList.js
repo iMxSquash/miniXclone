@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 import { useUser } from "@/app/context/UserContext";
 import { io } from "socket.io-client";
+import Modal from "../container/modal";
 
 export default function CommentList({ comments }) {
     const [loadedComments, setLoadedComments] = useState([]);
@@ -13,6 +14,8 @@ export default function CommentList({ comments }) {
     const router = useRouter();
     const { user } = useUser();
     const [socket, setSocket] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [commentToDelete, setCommentToDelete] = useState(null);
 
     useEffect(() => {
         const newSocket = io('http://localhost:3001');
@@ -115,22 +118,26 @@ export default function CommentList({ comments }) {
 
     const handleDelete = async (e, commentId) => {
         e.stopPropagation();
-        if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) return;
+        setCommentToDelete(commentId);
+        setModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!commentToDelete) return;
 
         try {
-            const res = await fetch(`/api/tweet/${commentId}`, {
+            const res = await fetch(`/api/tweet/${commentToDelete}`, {
                 method: 'DELETE'
             });
 
             if (res.ok) {
-                setLoadedComments(loadedComments.filter(comment => comment._id !== commentId));
-            } else {
-                alert('Erreur lors de la suppression du commentaire');
+                setLoadedComments(loadedComments.filter(comment => comment._id !== commentToDelete));
             }
         } catch (error) {
             console.error("Delete error:", error);
-            alert('Erreur lors de la suppression du commentaire');
         }
+        setModalOpen(false);
+        setCommentToDelete(null);
     };
 
     const handleAvatarClick = (e, authorId) => {
@@ -149,68 +156,80 @@ export default function CommentList({ comments }) {
     }
 
     return (
-        <div className="flex flex-col">
-            <h2 className="p-4 font-bold text-xl border-b border-border-dark">
-                Commentaires
-            </h2>
-            {loadedComments.map((comment) => (
-                <div
-                    key={comment._id}
-                    className="flex p-4 border-b border-border-dark hover:bg-gray-50/5 cursor-pointer"
-                    onClick={() => handleTweetClick(comment._id)}
-                >
-                    <div className="w-[20%]">
-                        <img
-                            src={comment.author.avatar}
-                            alt={comment.author.name}
-                            className="rounded-full w-10 h-10 cursor-pointer hover:opacity-80"
-                            onClick={(e) => handleAvatarClick(e, comment.author._id)}
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1 w-[85%]">
-                        <div className="flex items-center gap-2">
-                            <span className="font-bold">{comment.author.name}</span>
-                            <span className="text-secondary text-sm">
-                                {new Date(comment.createdAt).toLocaleDateString()}
-                            </span>
+        <>
+            <div className="flex flex-col">
+                <h2 className="p-4 font-bold text-xl border-b border-border-dark">
+                    Commentaires
+                </h2>
+                {loadedComments.map((comment) => (
+                    <div
+                        key={comment._id}
+                        className="flex p-4 border-b border-border-dark hover:bg-gray-50/5 cursor-pointer"
+                        onClick={() => handleTweetClick(comment._id)}
+                    >
+                        <div className="w-[20%]">
+                            <img
+                                src={comment.author.avatar}
+                                alt={comment.author.name}
+                                className="rounded-full w-10 h-10 cursor-pointer hover:opacity-80"
+                                onClick={(e) => handleAvatarClick(e, comment.author._id)}
+                            />
                         </div>
-                        <p className="text-wrap">{comment.content}</p>
-                        {comment.mediaFiles?.length > 0 && (
-                            <div className="mt-2 grid grid-cols-2 gap-2">
-                                {comment.mediaFiles.map((url, index) => (
-                                    <div key={index} className="relative pt-[100%]">
-                                        <Image
-                                            src={url}
-                                            alt={`Media ${index + 1}`}
-                                            fill
-                                            className="absolute inset-0 object-cover rounded-lg"
-                                        />
-                                    </div>
-                                ))}
+                        <div className="flex flex-col gap-1 w-[85%]">
+                            <div className="flex items-center gap-2">
+                                <span className="font-bold">{comment.author.name}</span>
+                                <span className="text-secondary text-sm">
+                                    {new Date(comment.createdAt).toLocaleDateString()}
+                                </span>
                             </div>
-                        )}
-                        <div className="mt-2 flex gap-4">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleLike(comment._id);
-                                }}
-                                className={comment.likes?.includes(user._id) ? "text-red-500" : ""}
-                            >
-                                ❤️ {comment.likes?.length || 0}
-                            </button>
-                            {user._id === comment.author._id && (
-                                <button
-                                    onClick={(e) => handleDelete(e, comment._id)}
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    🗑️
-                                </button>
+                            <p className="text-wrap">{comment.content}</p>
+                            {comment.mediaFiles?.length > 0 && (
+                                <div className="mt-2 grid grid-cols-2 gap-2">
+                                    {comment.mediaFiles.map((url, index) => (
+                                        <div key={index} className="relative pt-[100%]">
+                                            <Image
+                                                src={url}
+                                                alt={`Media ${index + 1}`}
+                                                fill
+                                                className="absolute inset-0 object-cover rounded-lg"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
                             )}
+                            <div className="mt-2 flex gap-4">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleLike(comment._id);
+                                    }}
+                                    className={comment.likes?.includes(user._id) ? "text-red-500" : ""}
+                                >
+                                    ❤️ {comment.likes?.length || 0}
+                                </button>
+                                {user._id === comment.author._id && (
+                                    <button
+                                        onClick={(e) => handleDelete(e, comment._id)}
+                                        className="text-red-500 hover:text-red-700"
+                                    >
+                                        🗑️
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
-        </div>
+                ))}
+            </div>
+            <Modal
+                isOpen={modalOpen}
+                onClose={() => {
+                    setModalOpen(false);
+                    setCommentToDelete(null);
+                }}
+                onConfirm={confirmDelete}
+                title="Supprimer le commentaire"
+                message="Êtes-vous sûr de vouloir supprimer ce commentaire ? Cette action est irréversible."
+            />
+        </>
     );
 }

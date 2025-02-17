@@ -42,7 +42,7 @@ export async function GET(req, { params }) {
 export async function DELETE(req, { params }) {
     try {
         await connect();
-        const { id } = params;
+        const { id } = await params;
         
         const tweet = await Tweet.findById(id);
         if (!tweet) {
