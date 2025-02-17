@@ -34,7 +34,7 @@ const TweetPage = () => {
     if (!tweet) return <div>Tweet not found</div>;
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4  border-r border-border-dark">
             <TweetDetail tweet={tweet} setTweet={setTweet} />
             <AddComment tweetId={id} setTweet={setTweet} />
             <CommentList comments={tweet.comments} />

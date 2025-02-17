@@ -41,7 +41,7 @@ const ConversationPage = () => {
     if (!conversation) return <Loading />;
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full border-r border-border-dark">
             <div className="p-4 border-b border-border-dark">
                 <div className="flex items-center gap-3">
                     <img

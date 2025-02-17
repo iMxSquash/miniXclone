@@ -29,7 +29,7 @@ const Search = () => {
     };
 
     return (
-        <div className="mx-auto px-4 py-2">
+        <div className="mx-auto px-4 py-2 h-[100dvh] overflow-y-auto border-r border-border-dark">
             <SearchBar onSearch={handleSearch} />
             {loading ? (
                 <div className="text-center mt-4">

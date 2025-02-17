@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
       </Head>
       <html lang="fr">
         <body>
-          <main className="flex max-w-4xl mx-auto border-r border-border-dark">
+          <main className="flex max-w-4xl mx-auto">
             <Navbar />
             <main className="w-full h-[100dvh] overflow-y-auto">
               {children}

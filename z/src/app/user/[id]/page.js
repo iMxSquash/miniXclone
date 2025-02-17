@@ -17,9 +17,9 @@ const UserId = async ({ params }) => {
         const userGeted = await getUser(id);
 
         return (
-            <>
+            <div className="border-r border-border-dark">
                 <ProfilUser userGeted={userGeted} />
-            </>
+            </div>
         );
     } catch (error) {
         return (

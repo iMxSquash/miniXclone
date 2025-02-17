@@ -33,7 +33,7 @@ const Messages = () => {
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full border-r border-border-dark">
       <div className="p-4 border-b border-border-dark">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-bold">Messages</h1>
