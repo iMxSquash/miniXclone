@@ -33,12 +33,22 @@ export default function MessageList({ messages, currentUser }) {
                     return (
                         <div
                             key={message._id}
-                            className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
+                            className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} items-start gap-2`}
                         >
+                            {!isOwnMessage && (
+                                <div className="w-8 h-8 relative flex-shrink-0">
+                                    <Image
+                                        src={message.sender.avatar || '/default-avatar.png'}
+                                        alt={message.sender.name}
+                                        fill
+                                        className="rounded-full object-cover"
+                                    />
+                                </div>
+                            )}
                             <div
                                 className={`max-w-[70%] ${isOwnMessage
-                                        ? 'bg-primary text-secondary-light rounded-l-lg rounded-tr-lg'
-                                        : 'bg-secondary-light text-secondary-dark rounded-r-lg rounded-tl-lg'
+                                    ? 'bg-primary text-secondary-light rounded-l-lg rounded-tr-lg'
+                                    : 'bg-secondary-light text-secondary-dark rounded-r-lg rounded-tl-lg'
                                     } p-3`}
                             >
                                 {!isOwnMessage && (
