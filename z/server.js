@@ -24,6 +24,12 @@ io.on("connection", (socket) => {
         io.emit("newMessage", message);
     });
 
+    // Gestion des commentaires en temps réel
+    socket.on("newComment", (comment) => {
+        console.log("💭 Nouveau commentaire reçu:", comment);
+        io.emit("newComment", comment);
+    });
+
     socket.on("disconnect", () => {
         console.log("🔴 Client déconnecté:", socket.id);
     });

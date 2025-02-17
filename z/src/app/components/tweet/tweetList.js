@@ -139,7 +139,7 @@ export default function TweetList() {
                         className="flex justify-between w-full border-b border-border-dark p-4 cursor-pointer hover:bg-gray-50/5"
                         onClick={(e) => handleTweetClick(e, tweet._id)}
                     >
-                        <div className="h-full w-[20%]">
+                        <div className="h-full w-[20%] md:w-[10%]">
                             <img
                                 src={tweet.author.avatar}
                                 alt={tweet.author.name}
@@ -147,7 +147,7 @@ export default function TweetList() {
                                 onClick={(e) => handleAvatarClick(e, tweet.author._id)}
                             />
                         </div>
-                        <div className="flex flex-col gap-2 w-[75%]">
+                        <div className="flex flex-col gap-2 w-[75%] md:w-[95%]">
                             <div className="flex gap-4 align-top">
                                 <div className="flex flex-col">
                                     <span className="font-bold">{tweet.author.name}</span>

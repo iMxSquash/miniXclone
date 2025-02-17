@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import useSocket from "../hook/useSocket";
 import { ImageIcon, X } from "lucide-react";
@@ -13,6 +13,19 @@ export default function SendMessage({ conversationId }) {
     const [images, setImages] = useState([]);
     const [previews, setPreviews] = useState([]);
     const [loading, setLoading] = useState(false);
+    const textareaRef = useRef(null);
+
+    const adjustTextareaHeight = () => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        }
+    };
+
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [content]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -61,67 +74,78 @@ export default function SendMessage({ conversationId }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-4">
-            <div className="flex flex-col gap-2">
-                <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Écrivez votre message..."
-                    className="w-full p-2 bg-background border border-border-dark rounded-lg resize-none"
-                    rows={3}
-                />
-
-                {previews.length > 0 && (
-                    <div className="flex gap-2 flex-wrap">
-                        {previews.map((preview, index) => (
-                            <div key={index} className="relative">
-                                <img
-                                    src={preview}
-                                    alt="Preview"
-                                    className="w-20 h-20 object-cover rounded"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setImages(images.filter((_, i) => i !== index));
-                                        setPreviews(previews.filter((_, i) => i !== index));
-                                    }}
-                                    className="absolute -top-2 -right-2 bg-background rounded-full"
-                                >
-                                    <X size={20} />
-                                </button>
-                            </div>
-                        ))}
+        <form onSubmit={handleSubmit} className="p-4 border-t border-border-dark">
+            <div className="flex items-start gap-4 w-full">
+                <Image src={user.avatar} width={40} height={40} alt={user.name} className="rounded-full" />
+                <div className="relative w-full">
+                    <textarea
+                        ref={textareaRef}
+                        value={content}
+                        onChange={(e) => {
+                            if (e.target.value.length <= 1000) {
+                                setContent(e.target.value);
+                            }
+                        }}
+                        placeholder="Écrivez votre message..."
+                        maxLength={1000}
+                        className="w-full p-2 pb-6 bg-transparent resize-none outline-none placeholder:text-secondary text-secondary-light"
+                    />
+                    <div className="absolute bottom-2 right-2 text-sm text-secondary">
+                        {content.length}/1000
                     </div>
-                )}
-
-                <div className="flex justify-between items-center">
-                    <label className="cursor-pointer">
-                        <ImageIcon className="text-primary" />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            className="hidden"
-                            onChange={(e) => {
-                                const files = Array.from(e.target.files);
-                                setImages(prev => [...prev, ...files]);
-                                setPreviews(prev => [
-                                    ...prev,
-                                    ...files.map(file => URL.createObjectURL(file))
-                                ]);
-                            }}
-                        />
-                    </label>
-
-                    <button
-                        type="submit"
-                        disabled={loading || (!content && images.length === 0)}
-                        className="bg-primary text-white px-4 py-2 rounded-full disabled:opacity-50"
-                    >
-                        Envoyer
-                    </button>
                 </div>
+            </div>
+
+            {previews.length > 0 && (
+                <div className="flex gap-2 flex-wrap ml-14 mt-2">
+                    {previews.map((preview, index) => (
+                        <div key={index} className="relative">
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="w-20 h-20 object-cover rounded"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setImages(images.filter((_, i) => i !== index));
+                                    setPreviews(previews.filter((_, i) => i !== index));
+                                }}
+                                className="absolute top-2 right-2 bg-background/50 text-secondary-light rounded-full p-1"
+                            >
+                                <X size={16} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <div className="flex justify-between items-center py-2 border-t border-border-dark mt-2 ml-14">
+                <label className="cursor-pointer text-primary">
+                    <ImageIcon />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={(e) => {
+                            const files = Array.from(e.target.files);
+                            setImages(prev => [...prev, ...files]);
+                            setPreviews(prev => [
+                                ...prev,
+                                ...files.map(file => URL.createObjectURL(file))
+                            ]);
+                        }}
+                    />
+                </label>
+
+                <button
+                    type="submit"
+                    disabled={loading || (!content && images.length === 0)}
+                    className="text-background px-6 py-2 rounded-full bg-secondary-light hover:bg-secondary-light/90 disabled:opacity-50"
+                >
+                    Envoyer
+                </button>
             </div>
         </form>
     );

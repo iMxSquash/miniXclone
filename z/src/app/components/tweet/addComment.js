@@ -1,8 +1,9 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import Image from "next/image";
 import { ImageIcon, XCircle } from "lucide-react";
+import { io } from "socket.io-client";
 
 export default function AddComment({ tweetId, setTweet }) {
     const [content, setContent] = useState("");
@@ -10,6 +11,14 @@ export default function AddComment({ tweetId, setTweet }) {
     const [isLoading, setIsLoading] = useState(false);
     const fileInputRef = useRef(null);
     const { user } = useUser();
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:3001');
+        setSocket(newSocket);
+
+        return () => newSocket.disconnect();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -54,6 +63,12 @@ export default function AddComment({ tweetId, setTweet }) {
                     ...prev,
                     comments: [...prev.comments, data.comment._id]
                 }));
+                
+                // Émettre le nouveau commentaire via websocket
+                if (socket) {
+                    socket.emit('newComment', data.comment);
+                }
+
                 setContent("");
                 setMediaFiles([]);
             }

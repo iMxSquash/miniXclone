@@ -9,7 +9,7 @@ const SearchResponse = ({ users, tweets }) => {
     const { user } = useUser();
     const router = useRouter();
     const [localTweets, setLocalTweets] = useState(tweets);
-    const [activeTab, setActiveTab] = useState("users"); // Nouvel état pour les onglets
+    const [activeTab, setActiveTab] = useState("users");
 
     const handleLike = async (tweetId) => {
         const res = await fetch(`/api/tweet/${tweetId}/like`, {

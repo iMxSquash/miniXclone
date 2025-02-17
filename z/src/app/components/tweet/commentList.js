@@ -5,12 +5,37 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 import { useUser } from "@/app/context/UserContext";
+import { io } from "socket.io-client";
 
 export default function CommentList({ comments }) {
     const [loadedComments, setLoadedComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { user } = useUser();
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const newSocket = io('http://localhost:3001');
+        setSocket(newSocket);
+
+        return () => newSocket.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('newComment', async (comment) => {
+                try {
+                    const res = await fetch(`/api/tweet/${comment._id}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setLoadedComments(prev => [data.tweet, ...prev]);
+                    }
+                } catch (error) {
+                    console.error("Error fetching new comment:", error);
+                }
+            });
+        }
+    }, [socket]);
 
     useEffect(() => {
         const fetchComments = async () => {

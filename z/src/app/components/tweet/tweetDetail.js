@@ -63,6 +63,30 @@ export default function TweetDetail({ tweet, setTweet }) {
             onClick={handleTweetClick}
             className="flex flex-col p-4 border-b border-border-dark cursor-pointer"
         >
+            {tweet.parentTweet && (
+                <div className="mb-3 p-3 border-l-2 border-gray-400"
+                    onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/tweet/${tweet.parentTweet._id}`);
+                    }}
+                >
+                    <div className="flex gap-3">
+                        <img
+                            src={tweet.parentTweet.author.avatar}
+                            alt={tweet.parentTweet.author.name}
+                            className="w-8 h-8 rounded-full cursor-pointer hover:opacity-80"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/user/${tweet.parentTweet.author._id}`);
+                            }}
+                        />
+                        <div className="flex flex-col">
+                            <span className="font-bold text-sm">{tweet.parentTweet.author.name}</span>
+                            <p className="text-sm text-gray-500">{tweet.parentTweet.content}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="flex gap-3">
                 <img
                     src={tweet.author.avatar}
