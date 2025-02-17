@@ -11,7 +11,7 @@ export async function POST(req) {
         const { email, password } = await req.json();
 
         await connect();
-        
+
         // vérifier si l'utilisateur existe
         const user = await User.findOne({ email });
 
@@ -39,11 +39,11 @@ export async function POST(req) {
         });
 
         console.log("cookies 2", cookies().get('authToken'));
-        
+
         // supprime le mot de passe de la réponse
         const { password: _, ...userData } = user._doc;
         console.log("userdata", userData);
-        
+
 
         return NextResponse.json(userData, { status: 200 });
     }
