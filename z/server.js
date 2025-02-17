@@ -18,6 +18,12 @@ io.on("connection", (socket) => {
         io.emit("newTweet", tweet);
     });
 
+    // Gestion des messages en temps réel
+    socket.on("newMessage", (message) => {
+        console.log("💬 Message reçu:", message);
+        io.emit("newMessage", message);
+    });
+
     socket.on("disconnect", () => {
         console.log("🔴 Client déconnecté:", socket.id);
     });

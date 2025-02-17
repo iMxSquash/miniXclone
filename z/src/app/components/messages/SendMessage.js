@@ -49,7 +49,7 @@ export default function SendMessage({ conversationId }) {
 
             if (res.ok && socket) {
                 const newMessage = await res.json();
-                socket.emit("newMessage", newMessage);
+                socket.emit("newMessage", newMessage);  // Émission du message via socket
                 setContent("");
                 setImages([]);
                 setPreviews([]);
