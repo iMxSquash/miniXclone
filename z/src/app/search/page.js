@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { URL } from '../utils/constant/utls';
 import withAuth from "../components/withAuth";
 import SearchBar from "../components/searchBar";
 import SearchResponse from "../components/searchResponse";
+import Loading from "../loading";
 
 const Search = () => {
     const [searchResults, setSearchResults] = useState({ users: [], tweets: [] });
@@ -34,7 +33,7 @@ const Search = () => {
             <SearchBar onSearch={handleSearch} />
             {loading ? (
                 <div className="text-center mt-4">
-                    <p className="text-white">Chargement...</p>
+                    <Loading />
                 </div>
             ) : (
                 <SearchResponse
