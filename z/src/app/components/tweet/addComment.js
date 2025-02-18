@@ -27,7 +27,7 @@ export default function AddComment({ tweetId, setTweet }) {
 
         setIsLoading(true);
         try {
-            // Upload images first if any
+            // Upload images en premier si any
             const uploadedUrls = [];
             if (mediaFiles.length > 0) {
                 for (const file of mediaFiles) {
@@ -46,7 +46,7 @@ export default function AddComment({ tweetId, setTweet }) {
                 }
             }
 
-            // Create comment
+            // create comment
             const res = await fetch(`/api/tweet/${tweetId}/replies`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -64,7 +64,7 @@ export default function AddComment({ tweetId, setTweet }) {
                     comments: [...prev.comments, data.comment._id]
                 }));
                 
-                // Émettre le nouveau commentaire via websocket
+                // eémettre le nouveau commentaire via websocket
                 if (socket) {
                     socket.emit('newComment', data.comment);
                 }

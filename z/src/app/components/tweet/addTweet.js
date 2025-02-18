@@ -30,7 +30,7 @@ export default function AddTweet() {
 
         setLoading(true);
         try {
-            // Upload des images
+            // upload des images
             const mediaUrls = [];
             for (const image of images) {
                 const formData = new FormData();
@@ -42,7 +42,7 @@ export default function AddTweet() {
                 }
             }
 
-            // Créer le tweet
+            // créer le tweet
             const formData = new FormData();
             formData.append("userId", user._id);
             formData.append("content", content);

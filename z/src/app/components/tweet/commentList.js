@@ -74,7 +74,7 @@ export default function CommentList({ comments }) {
                     })
                 );
 
-                // Filtrer les doublons par _id
+                // filtrer les doublons par _id
                 const uniqueComments = commentsData.filter((comment, index, self) =>
                     comment && index === self.findIndex(c => c && c._id === comment._id)
                 );

@@ -24,9 +24,9 @@ const FollowListModal = ({ userId, type, onClose }) => {
                         userIds = data.following;
                     }
 
-                    // Correction de la gestion des IDs
+                    // correction de la gestion des IDs
                     const userDetailsPromises = userIds.map(async (id) => {
-                        // Extraire l'ID correctement selon le format
+                        // extraire l'ID correctement selon le format
                         const userId = id?._id || id?.toString() || id;
 
                         if (!userId) {

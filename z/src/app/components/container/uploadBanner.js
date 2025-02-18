@@ -24,11 +24,11 @@ const UploadBanner = () => {
             const { url } = await res.json();
             setPreview(url);
 
-            // Mettre à jour l'utilisateur dans le contexte
+            // mettre à jour l'utilisateur dans le contexte
             if (user) {
                 login({ ...user, banner: url });
 
-                // Enregistrer la banner dans la DB 
+                // enregistrer la banner dans la DB 
                 await fetch(`/api/user/${user._id}`, {
                     method: "PUT",
                     body: JSON.stringify({ banner: url }),

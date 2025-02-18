@@ -25,7 +25,7 @@ export async function POST(req) {
         const newTweet = await Tweet.create({
             author: userId,
             content,
-            mediaFiles, // L'array est directement utilisable
+            mediaFiles,
             tags: [],
         });
 
@@ -41,7 +41,7 @@ export async function GET(req) {
         const tweets = await Tweet.find()
             .populate("author", "name avatar")
             .populate("replies")
-            .sort({ createdAt: -1 }); // Trier par date décroissante
+            .sort({ createdAt: -1 }); // trier par date décroissante
 
         return NextResponse.json({ tweets }, { status: 200 });
     } catch (error) {

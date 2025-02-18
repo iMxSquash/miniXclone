@@ -6,10 +6,10 @@ const TweetSchema = new mongoose.Schema(
         content: { type: String, required: true },
         tags: [{ type: String }],
         mediaFiles: [{ type: String }],
-        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Pour les likes
-        replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Pour les retweets/republications
-        comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tweet" }], // Pour les commentaires
-        replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Tweet", default: null }, // Tweet parent si c'est un commentaire
+        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+        replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // pour les retweets/republications
+        comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tweet" }],
+        replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Tweet", default: null }, // tweet parent si c'est un commentaire
     },
     { timestamps: true }
 );

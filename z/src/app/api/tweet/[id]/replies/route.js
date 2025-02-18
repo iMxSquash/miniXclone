@@ -3,7 +3,7 @@ import connect from "../../../../../../libs/mongodb";
 import Tweet from "../../../../../../models/tweet.model";
 import User from "../../../../../../models/user.model";
 
-// Pour les retweets/republications
+// pour les retweets/republications
 export async function PUT(req, { params }) {
     try {
         await connect();
@@ -46,7 +46,7 @@ export async function PUT(req, { params }) {
     }
 }
 
-// Pour les commentaires
+// pour les commentaires
 export async function POST(req, { params }) {
     try {
         await connect();
@@ -65,7 +65,7 @@ export async function POST(req, { params }) {
         const comment = await Tweet.create({
             author: userId,
             content,
-            mediaFiles: mediaFiles || [], // Ajout des mediaFiles
+            mediaFiles: mediaFiles || [],
             replyTo: id
         });
 
@@ -83,7 +83,7 @@ export async function POST(req, { params }) {
     }
 }
 
-// Pour supprimer un commentaire
+// pour supprimer un commentaire
 export async function DELETE(req, { params }) {
     try {
         await connect();
@@ -95,7 +95,7 @@ export async function DELETE(req, { params }) {
             return NextResponse.json({ error: "Tweet non trouvé" }, { status: 404 });
         }
 
-        // Vérifier si l'utilisateur est l'auteur du commentaire
+        // vérifier si l'utilisateur est l'auteur du commentaire
         const comment = await Tweet.findById(commentId);
         if (!comment || comment.author.toString() !== userId) {
             return NextResponse.json({ error: "Non autorisé" }, { status: 403 });

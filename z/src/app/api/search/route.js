@@ -14,7 +14,7 @@ export async function GET(request) {
 
         await connectMongoDB();
 
-        // Recherche des utilisateurs
+        // recherche des utilisateurs
         const users = await User.find({
             $or: [
                 { name: { $regex: query, $options: 'i' } },
@@ -22,7 +22,7 @@ export async function GET(request) {
             ]
         }).select('_id name email avatar');
 
-        // Recherche des tweets
+        // recherche des tweets
         const tweets = await Tweet.find({
             content: { $regex: query, $options: 'i' }
         })

@@ -24,11 +24,11 @@ const UploadAvatar = () => {
             const { url } = await res.json();
             setPreview(url);
 
-            // Mettre à jour l'utilisateur dans le contexte
+            // mettre à jour l'utilisateur dans le contexte
             if (user) {
                 login({ ...user, avatar: url });
 
-                // Enregistrer l'avatar dans la DB 
+                // enregistrer l'avatar dans la DB 
                 await fetch(`/api/user/${user._id}`, {
                     method: "PUT",
                     body: JSON.stringify({ avatar: url }),

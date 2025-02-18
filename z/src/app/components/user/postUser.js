@@ -87,7 +87,6 @@ export default function PostUser({ userId }) {
                 body: JSON.stringify({ userId: user._id })
             });
 
-            // ... reste du code de gestion de la réponse ...
         } catch (error) {
             console.error("Republication error:", error);
         }

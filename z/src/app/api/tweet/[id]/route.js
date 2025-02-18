@@ -21,7 +21,7 @@ export async function GET(req, { params }) {
             return NextResponse.json({ error: "Tweet not found" }, { status: 404 });
         }
 
-        // Si le tweet est une réponse à un autre tweet, récupérer le tweet parent
+        // si le tweet est une réponse à un autre tweet, récupérer le tweet parent
         if (tweet.replyTo) {
             const parentTweet = await Tweet.findById(tweet.replyTo)
                 .populate('author')

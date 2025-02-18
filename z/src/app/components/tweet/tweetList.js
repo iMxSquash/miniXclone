@@ -61,7 +61,7 @@ export default function TweetList() {
         const res = await fetch(`/api/tweet/${tweetId}/like`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: user._id }) // Remplacez par l'ID de l'utilisateur actuel
+            body: JSON.stringify({ userId: user._id }) // remplacez par l'ID de l'utilisateur actuel
         });
         if (res.ok) {
             const updatedTweet = tweets.find(t => t._id === tweetId);
@@ -70,7 +70,7 @@ export default function TweetList() {
                 ? updatedTweet.likes.filter(id => id !== user._id)
                 : [...updatedTweet.likes, user._id];
             
-            // Émettre l'événement socket pour le like
+            // émettre l'événement socket pour le like
             socket.emit("like", {
                 tweetId,
                 likes: newLikes
@@ -144,7 +144,7 @@ export default function TweetList() {
     };
 
     const handleTweetClick = (e, tweetId) => {
-        // Empêcher la propagation si on clique sur un bouton
+        // empêcher la propagation si on clique sur un bouton
         if (e.target.tagName.toLowerCase() === 'button') {
             return;
         }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import connect from "../../../../libs/mongodb";
 import Conversation from "../../../../models/conversation.model";
-import Message from "../../../../models/message.model"; // Ajout de l'import du modèle Message
+import Message from "../../../../models/message.model";
 
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
@@ -9,14 +9,14 @@ export async function GET(request) {
 
     try {
         await connect();
-        // Assure-toi que le modèle Message est chargé avant d'utiliser populate
-        await Message.createIndexes(); // Cette ligne force le chargement du modèle
+
+        await Message.createIndexes(); // force le chargement du modèle
 
         const conversations = await Conversation.find({ participants: userId })
             .populate("participants", "name avatar")
             .populate({
                 path: "lastMessage",
-                model: "Message" // Spécifie explicitement le modèle
+                model: "Message",
             })
             .sort({ updatedAt: -1 });
 

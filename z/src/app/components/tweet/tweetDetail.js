@@ -46,7 +46,7 @@ export default function TweetDetail({ tweet, setTweet }) {
                 ? tweet.likes.filter(id => id !== user._id)
                 : [...tweet.likes, user._id];
             
-            // Émettre l'événement socket pour le like
+            // émettre l'événement socket pour le like
             socket.emit("like", {
                 tweetId: tweet._id,
                 likes: newLikes

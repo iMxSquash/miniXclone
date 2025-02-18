@@ -10,7 +10,7 @@ export async function POST(request) {
 
         const newMessage = await Message.create(body);
 
-        // Mise à jour du dernier message de la conversation
+        // mise à jour du dernier message de la conversation
         await Conversation.findByIdAndUpdate(
             body.conversationId,
             { lastMessage: newMessage._id },

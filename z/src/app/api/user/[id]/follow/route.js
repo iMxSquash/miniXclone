@@ -25,7 +25,7 @@ export async function PUT(req, { params }) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
-        // Convertir id et userId en ObjectId
+        // convertir id et userId en ObjectId
         const userIdObject = new mongoose.Types.ObjectId(userId);
         const idObject = new mongoose.Types.ObjectId(id);
 
