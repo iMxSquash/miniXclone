@@ -7,6 +7,7 @@ import SendMessage from "../../components/messages/SendMessage";
 import useSocket from "../../components/hook/useSocket";
 import { useParams } from "next/navigation";
 import Loading from "@/app/loading";
+import withAuth from "../../components/hook/withAuth";
 
 const ConversationPage = () => {
     const { id } = useParams();
@@ -68,4 +69,4 @@ const ConversationPage = () => {
     );
 };
 
-export default ConversationPage;
+export default withAuth(ConversationPage);

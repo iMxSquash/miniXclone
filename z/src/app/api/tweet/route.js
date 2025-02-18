@@ -13,7 +13,7 @@ export async function POST(req) {
         const content = formData.get("content");
         const mediaFiles = JSON.parse(formData.get("mediaFiles") || "[]");
 
-        if (!userId || !content) {
+        if (!userId || !content && mediaFiles.length === 0) {
             return NextResponse.json({ error: "Content is required" }, { status: 400 });
         }
 

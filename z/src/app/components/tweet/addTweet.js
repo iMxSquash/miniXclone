@@ -23,8 +23,8 @@ export default function AddTweet() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!content) {
-            setMessage("Veuillez remplir tous les champs !");
+        if (!content && images.length === 0) {
+            setMessage("Veuillez ajouter du texte ou une image !");
             return;
         }
 
